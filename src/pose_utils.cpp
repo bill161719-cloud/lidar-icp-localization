@@ -1,6 +1,5 @@
 #include "pose_utils.h"
 
-#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
@@ -45,8 +44,12 @@ double rotationErrorRad(const Eigen::Matrix4f& estimated,
                         const Eigen::Matrix4f& ground_truth) {
     requireTransform(estimated);
     requireTransform(ground_truth);
-    const Eigen::Matrix3d relative = ground_truth.topLeftCorner<3, 3>().cast<double>().transpose()
-                                  * estimated.topLeftCorner<3, 3>().cast<double>();
-    return std::acos(std::clamp((relative.trace() - 1.0) / 2.0, -1.0, 1.0));
+    // Equivalent SO(3) angle, stable near zero/pi for float32 matrix inputs.
+    // Normalize away matrix storage roundoff before computing the relative rotation.
+    const Eigen::Quaterniond estimated_rotation(
+        estimated.topLeftCorner<3, 3>().cast<double>());
+    const Eigen::Quaterniond truth_rotation(
+        ground_truth.topLeftCorner<3, 3>().cast<double>());
+    return estimated_rotation.normalized().angularDistance(truth_rotation.normalized());
 }
 }  // namespace lidar

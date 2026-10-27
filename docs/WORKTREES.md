@@ -15,7 +15,7 @@
 
 2026-10-27 已实际完成：三个 worktree 在准备提交 70b448a（015a535 的后继）上分别配置、编译、
 执行 CTest 4/4 和直接运行依赖程序，全部成功；随后仅同步最终进度文档提交。
-最终启动提交以各树 `git log -1 --oneline` 为准，三个分支与 main 统一快进，不在提交中自引用哈希。
+准备阶段曾将三个分支与 main 统一快进；模块交付后各分支有独立提交，当前以各树 `git log -1 --oneline` 为准，不自引用哈希。
 验证日志在主目录 build/lidar-icp-module-a-verify.log、lidar-icp-module-b-verify.log、lidar-icp-module-c-verify.log。
 各树原始 CTest 日志在其 build-pcl/Testing/Temporary/LastTest.log。
 
@@ -41,7 +41,7 @@ Eigen3_DIR 必须指向主目录 `.local-deps/eigen-3.4.0/share/eigen3/cmake`，
 运行时 PATH 由脚本临时加入共享 PCL bin 和 UCRT64 bin，脚本结束恢复，不修改全局 PATH。
 各模块不下载或重新构建 PCL；共享依赖仅由主对话维护。内存紧张时不要同时启动三轮编译。
 
-初始应有 4 项 bootstrap/依赖测试全部通过，依赖程序输出 PCL 1.15.1、Eigen 3.4.0。
+准备阶段有 4 项 bootstrap/依赖测试；最新 main 集成 A/B 后完整 CTest 应有 8 项全部通过，依赖程序输出 PCL 1.15.1、Eigen 3.4.0。
 这不代表模块算法完成；添加实现和测试后重跑同一脚本，CMake 自动启用 INTERFACES.md 指定目标。
 
 ## 文件边界与验收

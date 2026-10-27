@@ -15,7 +15,10 @@ A 负责输入点云与纯预处理；B 负责配准和位姿；C 负责生成/�
 共享 include/cloud_types.h 由主对话维护。计划目标：cloud_processing、icp_registration、
 pose_utils、generate_test_data 和 lidar_icp。主对话已配置可选的模块库/测试入口，
 仅在所属源文件存在时创建目标；模块新增文件后重新配置即可，不得修改共享 CMake。
-当前仅 lidar_icp bootstrap；开启 LIDAR_ENABLE_PCL 时检查 Eigen/PCL 并构建 dependency_check。
+当前 A/B 已集成：cloud_processing、pose_utils、icp_registration 经 registration_pipeline 串联，
+lidar_icp 已提供 PCD 到 JSON 位姿报告的完整命令行。未开启 PCL 时仍只有帮助/版本入口。
+registration_pipeline 独立检查收敛、SE(3)、内点数/比例与 RMSE；拒绝结果只输出诊断，不输出有效 pose。
+开启 LIDAR_ENABLE_PCL 时仍保留 dependency_check；完整 CTest 含 A/B 单测和 CLI 端到端 test_pipeline。
 PCL 组件：common、io、filters、registration、visualization；kdtree/search 由 registration 等组件传递引入。
 Eigen 优先作为导入目标 Eigen3::Eigen。所有 C++ 库必须同位数、同编译器 ABI、同运行时。
 

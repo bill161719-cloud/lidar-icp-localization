@@ -32,6 +32,11 @@ int main() {
               && std::abs(pose.quaternion.z() - std::sin(0.3)) < 1e-7, "四元数 x,y,z");
         check(std::abs(lidar::translationErrorM(T, identity) - 3) < 1e-12, "已知平移误差");
         check(std::abs(lidar::rotationErrorRad(T, identity) - 0.6) < 1e-6, "已知旋转误差 rad");
+        check(lidar::rotationErrorRad(T, T) < 1e-12, "同一 float32 旋转误差应接近零");
+        Eigen::Matrix4f tinyRotation = identity;
+        tinyRotation.topLeftCorner<3, 3>() = Eigen::AngleAxisf(1e-6F, Eigen::Vector3f::UnitZ()).toRotationMatrix();
+        check(std::abs(lidar::rotationErrorRad(tinyRotation, identity) - 1e-6) < 1e-12,
+              "微小角度不能因 trace 的 float32 舍入变成零");
         const Eigen::Matrix4f inverse = T.inverse();
         const Eigen::Vector4f point(0.2F, -0.5F, 3, 1);
         check(lidar::isValidTransform(inverse) && (inverse * (T * point) - point).norm() < 1e-6F,

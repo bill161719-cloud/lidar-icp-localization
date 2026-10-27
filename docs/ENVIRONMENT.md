@@ -137,3 +137,10 @@ PCL 对齐探测显示 Failed 是预期分支：最终 PCL_USES_EIGEN_HANDMADE_A
 [MSYS2 Eigen 包](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-eigen3)、
 [PCL Windows 源码构建及编译器兼容要求](https://pointclouds.org/documentation/tutorials/compiling_pcl_windows.html)。
 vcpkg 评估依据：[MinGW 平台支持范围](https://learn.microsoft.com/en-us/vcpkg/users/platforms/mingw)。
+
+## A/B 首轮集成后的验证状态
+
+以上 4/4 为依赖准备阶段的历史结果。A/B 集成后已完成 Release 完整 CTest 8/8，含 9 个 CLI 端到端场景；
+最小 PCL OFF 模式另有 3/3 回归通过。依赖版本、安装前缀、GCC 和对齐设置未改变。
+test_pipeline 使用 Python >=3.9 的标准库驱动真实 C++ 进程，不依赖 Python PCL 绑定或第三方 Python 包。
+JSON 与日志、具体数值及警告分析见 INTEGRATION_AB.md；不将人工 smoke check 当真实道路验收。

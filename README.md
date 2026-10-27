@@ -4,11 +4,11 @@
 计划用 PCL ICP 对两帧 LiDAR 点云配准，用 Eigen 分析相对变换，并通过真值实验与少量道路数据验证。
 这是点云配准与相对位姿估计工程，不是完整 SLAM 或 FAST-LIO。
 
-**当前阶段：初始化骨架。只有 C++17 bootstrap CLI，尚未实现点云读取、ICP、可视化或真实道路实验。**
-数值精度、截图与算法性能尚无结果。PCL/Eigen 依赖已配置并验证，A/B/C 尚未启动。
-PCL ON 构建成功，已有和全新构建目录均 4/4 CTest 通过（含第三方依赖 smoke check）。
-初始化已完成 Release 构建和 3/3 bootstrap 测试；初始依赖缺失记录见 [初始化验证](docs/INITIALIZATION.md)，
-最新依赖状态、固定版本和命令见 [环境记录](docs/ENVIRONMENT.md)。
+**当前阶段：模块 A/B 首轮集成通过。已有“PCD 读取→有限点清理→体素→ICP→质量判断→JSON 位姿”命令行流程。**
+固定 PCL 1.15.1、Eigen 3.4.0 和现有 UCRT64 GCC，Release 完整 CTest 8/8（含 9 个真实 CLI 场景）。
+已验证人工真值、反向变换、失败拒绝及单个受控噪声/离群点场景；尚无真实道路、GUI 截图或性能基准。
+审核、修复、原始日志和人工结果见 [A/B 集成验收](docs/INTEGRATION_AB.md)。
+历史记录见 [初始化验证](docs/INITIALIZATION.md)，安装和依赖版本见 [环境记录](docs/ENVIRONMENT.md)。
 
 ## 构建最小工程
 
@@ -46,12 +46,44 @@ dependency_check 直接调用第三方体素滤波、恒等 ICP 和 VTK 场景�
 它不验证 GUI 实际渲染、真实点云精度或模块实现。模块新增所属源文件和测试后，CMake 会自动启用对应库/测试目标。
 共享依赖时设置 LIDAR_DEPS_ROOT 或传 -DependencyRoot；CMake 不在 PATH 时可传 -CMake。
 
+## 运行配准与复现集成测试
+
+实际验收命令（配置、Release 编译、完整 CTest；不会重新构建 PCL）：
+
+```powershell
+./tools/verify_dependencies.ps1 -BuildDirectory build-integration-ab -Jobs 1
+```
+
+测试会在 build-integration-ab/test-pipeline/run-*/ 保存 PCD、真值矩阵、每次 CLI 命令、JSON 报告、stderr 和退出码。
+以下命令使用最近生成的实际测试文件，可在主项目根目录运行，无需下载数据：
+
+```powershell
+$sampleRun = Get-ChildItem build-integration-ab/test-pipeline -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$savedPath = $env:Path
+try {
+  $ucrtBin = Split-Path -Parent (Get-Command g++.exe).Source
+  $env:Path = "$((Resolve-Path .local-deps/pcl-1.15.1/bin).Path);$ucrtBin;$savedPath"
+  ./build-integration-ab/lidar_icp.exe --source (Join-Path $sampleRun.FullName 'source cloud.pcd') --target (Join-Path $sampleRun.FullName 'target cloud.pcd') --initial (Join-Path $sampleRun.FullName 'initial.txt') --truth (Join-Path $sampleRun.FullName 'truth.txt') --voxel-size 0.005 --evaluation-distance 0.03 --max-rmse 0.01
+} finally {
+  $env:Path = $savedPath
+}
+```
+
+stdout 为 JSON；处理日志在 stderr。--output <report.json> 可保存报告，已有文件会被拒绝覆盖。
+--initial/--truth 是逐行 4×4、无标题的 SE(3) 矩阵；truth 只评分，不参与 ICP。无真值误差输出 null。
+可调参数和报告键见 [接口](docs/INTERFACES.md)，--help 列出 CLI 选项。
+
+**消费结果必须检查 accepted。** PCL 的 converged=true 也可能没有内点。
+默认要求至少 3 内点、内点率 >=0.5、内点 RMSE <=0.2 m 及合法 SE(3)；阈值需按实验调整。
+被拒绝时有效矩阵和 pose 为 null，只保留诊断矩阵。退出码：0 接受；2 输入非法；3 IO/运行错误；4 未收敛或质量拒绝。
+质量通过仍可能是局部最优；不能将 source→target 无条件当车辆运动，也不能由人工数据误差宣称实车精度。
+
 ## 目录与文档
 
 ```text
 include/         共享点云类型及未来 A/B 公开头文件
-src/             bootstrap 主程序及未来模块实现
-tests/           CTest 与依赖检查；未来数值/错误处理测试
+src/             CLI、A/B 实现与 registration_pipeline
+tests/           依赖、A/B 单测与 CLI 端到端测试
 tools/           未来数据生成与实验脚本
 data/sample/     未来可公开小型数据（当前为空）
 data/kitti/      本地道路数据（不提交）

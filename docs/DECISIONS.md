@@ -42,3 +42,17 @@
   与 A/B 测试目标，解决模块不能改 CMake 却需要独立编译测试的问题；不提前创建任何算法实现。
 - 接口 v1.1 明确 B 输入全部为有限点、evaluateAlignment 可接受少于 3 点；固定 C 生成器 CLI 和拒绝覆盖规则。
   函数签名和既定变换方向保持一致；A/B 可独立构造测试数据并行开发。
+
+## 2026-10-27 首轮 A/B 集成
+
+- 先审查所有权和实现，再按 A(5/5)→B(7/7)→流水线(8/8) 验收，不以子对话报告替代 main 测试。
+- 原始 IcpResult.converged 保持 PCL 含义；新增主对话所有的 registration_pipeline 应用质量门禁。
+  默认 min_inliers=3、min_inlier_ratio=0.5、max_rmse_m=0.2，不将收敛标志等同于可用位姿。
+- 有效位姿以 accepted 为准；失败保留诊断但 T_target_source/pose=null，退出码 4，未知数值不冒充零。
+  JSON 报告采用 schema_version=1，保留配置、统计和指标；stdout 与 stderr 分离，便于 C 记录失败。
+- 保持 source→target、米、弧度及真值误差含义；--truth 仅评分，绝不参与 ICP 初始化或质量验收。
+- 在 main 修复 B 的微小旋转误差：以归一化四元数 atan2 形式计算等价 SO(3) 角度。
+  先运行失败回归，再重新通过完整 CTest；不改签名、不放宽误差门限。
+- M01 定义为 A/B 首轮流水线集成，不再等待 C01；新增 M02 承接 C 工具集成，防止“先集成 C 才能启动 C”的依赖混淆。
+- 保留 Eigen/PCL/libstdc++ 分配器路径的 GCC 警告，检查源码配对和对齐配置后记录限制，不屏蔽或冒险改依赖。
+  审核证据、命令和实测结果见 INTEGRATION_AB.md；单个人工噪声 smoke 不当作真实道路或全面鲁棒性验收。

@@ -108,7 +108,9 @@ double rotationErrorRad(const Eigen::Matrix4f& estimated,
 
 有效矩阵：全有限、末行 [0,0,0,1]、RᵀR≈I、det(R)≈+1；tolerance 有限且 >0，
 否则 isValidTransform 返回 false；其余函数对非法变换抛 invalid_argument。
-平移误差 ||t_est-t_gt||；旋转误差 acos(clamp((trace(R_gtᵀR_est)-1)/2,-1,1))，返回弧度。
+平移误差 ||t_est-t_gt||；旋转误差的 SO(3) 数学定义为 acos(clamp((trace(R_gtᵀR_est)-1)/2,-1,1))，返回弧度。
+实现使用归一化四元数相对旋转的最短角（2*atan2(||v||,|w|)），与该定义数学等价，
+避免 float32 矩阵的 trace 舍入使微小旋转误差丢失或产生数值底噪；先验合法性检查不变。
 四元数输出标明 w,x,y,z；不强制欧拉角。需要欧拉角时明确轴顺序，不默认解释。
 
 ## 坐标、方向、真值
@@ -154,3 +156,28 @@ CSV 至少包含帧 ID、配置、点数、converged、fitness_m2、rmse_m、inl
 A、B 可并行：B 测试自行构造有限点云，不依赖 A 的实现；B 先实现 B01，再实现 B02。
 C01 生成器可独立开发；C03 真实完整实验依赖主对话集成 A/B/C01 和 C02 的数据准备。
 当前 4 个依赖/bootstrap 测试不是 A/B/C 验收测试；模块交付后必须出现相应新测试并通过。
+
+## 首轮集成补充：流水线、质量门禁与 CLI
+
+主对话维护 include/registration_pipeline.h、src/registration_pipeline.cpp、src/main.cpp 和 tests/test_pipeline.py。
+runRegistration(source_pcd, target_pcd, PipelineConfig, initial_T_target_source) 串联读取、清理、体素、ICP、质量检查，
+返回 PipelineResult（source/target 预处理统计、原始 IcpResult、quality.accepted 和拒绝原因）。
+assessRegistration(IcpResult, RegistrationQualityConfig) 将应用质量策略与 PCL converged 分开。
+
+默认 RegistrationQualityConfig：min_inliers=3、min_inlier_ratio=0.5、max_rmse_m=0.2；参数必须有限、
+最小内点数 >=3、比例在 [0,1]、RMSE 上限 >0。只有收敛、最终 SE(3)/点云/指标有效且全部门限通过才 accepted=true。
+阈值应按尺度/噪声/重叠调整；质量通过也不能证明场景无退化或位姿必然正确。
+
+CLI：lidar_icp --source <pcd> --target <pcd>，可选 --initial <matrix.txt>、--truth <matrix.txt>、--output <report.json>，
+--voxel-size、--max-iterations、--max-correspondence-distance、--evaluation-distance、--min-inliers、--min-inlier-ratio、--max-rmse。
+矩阵文件严格为 16 个逐行数字，无标题、无多余字段，必须为合法 SE(3)。--truth 只用于评分，不能参与 ICP 初值或质量决策。
+PCD VIEWPOINT 仅保留为元信息，不隐式作为初始位姿或坐标转换；source/target 的 XYZ 须已经使用米和约定坐标系。
+
+stdout 输出 schema_version=1 的 JSON，日志写 stderr；--output 可保存同一 JSON，拒绝覆盖已有文件。
+主要键：source/target、configuration、source_points/target_points、initial_T_target_source、converged、accepted、
+rejection_reason、fitness_m2、rmse_m、inliers、inlier_ratio、elapsed_ms、T_target_source、pose、diagnostic_T_target_source。
+pose 含 rotation（3×3）、translation_m、quaternion_wxyz。elapsed_ms 仍仅为 ICP align 时间。
+失败或质量拒绝时 T_target_source/pose 为 null，诊断矩阵不作为有效位姿；非有限 JSON 数字写 null，零内点 RMSE 不写 0。
+仅在 accepted 且提供 --truth 时输出 translation_error_m/rotation_error_rad，否则为 null，禁止用零冒充未知真值误差。
+退出码：0 已接受；2 参数/数据语义非法；3 读取/保存/运行错误；4 未收敛或质量拒绝。
+输入/IO 失败不生成配准 JSON，实验脚本应保留退出码和 stderr，不能将其记录为成功。

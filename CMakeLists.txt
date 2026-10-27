@@ -99,3 +99,17 @@ if(LIDAR_ENABLE_PCL)
     endforeach()
   endif()
 endif()
+
+if(TARGET cloud_processing AND TARGET icp_registration)
+  add_library(registration_pipeline STATIC src/registration_pipeline.cpp)
+  target_link_libraries(registration_pipeline PUBLIC cloud_processing icp_registration)
+  target_link_libraries(lidar_icp PRIVATE registration_pipeline)
+  target_compile_definitions(lidar_icp PRIVATE LIDAR_HAS_PIPELINE=1)
+  if(BUILD_TESTING)
+    find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME test_pipeline
+      COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tests/test_pipeline.py"
+        --exe $<TARGET_FILE:lidar_icp> --workdir "${PROJECT_BINARY_DIR}/test-pipeline")
+    set_tests_properties(test_pipeline PROPERTIES TIMEOUT 120)
+  endif()
+endif()

@@ -1,0 +1,52 @@
+# 模块 C 提交文件清单
+
+仅 docs/EXPERIMENTS.md 为修改文件，其余均为新增。原始点云、构建缓存与本地日志不在提交中。
+
+- `docs/EXPERIMENTS.md`
+- `tools/generate_test_data.cpp`
+- `tools/fetch_kitti_pair.py`
+- `tools/kitti_bin_to_pcd.py`
+- `tools/run_experiments.py`
+- `tools/test_experiment_tools.py`
+- `results/figures/module-c-v2/ATTRIBUTION.md`
+- `results/figures/module-c-v2/kitti_alignment.png`
+- `results/figures/module-c-v2/kitti_raw.png`
+- `results/figures/module-c-v2/synthetic_alignment.png`
+- `results/figures/module-c-v2/synthetic_errors.png`
+- `results/figures/module-c-v2/synthetic_raw.png`
+- `results/figures/module-c-v2/voxel_comparison.png`
+- `results/metrics/module-c-v2/ATTRIBUTION.md`
+- `results/metrics/module-c-v2/kitti_strict_gate.command.json`
+- `results/metrics/module-c-v2/kitti_strict_gate.json`
+- `results/metrics/module-c-v2/kitti_strict_gate.stderr.txt`
+- `results/metrics/module-c-v2/kitti_v0.1.command.json`
+- `results/metrics/module-c-v2/kitti_v0.1.json`
+- `results/metrics/module-c-v2/kitti_v0.1.stderr.txt`
+- `results/metrics/module-c-v2/kitti_v0.3.command.json`
+- `results/metrics/module-c-v2/kitti_v0.3.json`
+- `results/metrics/module-c-v2/kitti_v0.3.stderr.txt`
+- `results/metrics/module-c-v2/kitti_v0.6.command.json`
+- `results/metrics/module-c-v2/kitti_v0.6.json`
+- `results/metrics/module-c-v2/kitti_v0.6.stderr.txt`
+- `results/metrics/module-c-v2/provenance.json`
+- `results/metrics/module-c-v2/summary.csv`
+- `results/metrics/module-c-v2/synthetic_bad_initial.command.json`
+- `results/metrics/module-c-v2/synthetic_bad_initial.json`
+- `results/metrics/module-c-v2/synthetic_bad_initial.stderr.txt`
+- `results/metrics/module-c-v2/synthetic_noise_outliers.command.json`
+- `results/metrics/module-c-v2/synthetic_noise_outliers.json`
+- `results/metrics/module-c-v2/synthetic_noise_outliers.stderr.txt`
+- `results/metrics/module-c-v2/synthetic_partial.command.json`
+- `results/metrics/module-c-v2/synthetic_partial.json`
+- `results/metrics/module-c-v2/synthetic_partial.stderr.txt`
+- `results/metrics/module-c-v2/synthetic_v0.02.command.json`
+- `results/metrics/module-c-v2/synthetic_v0.02.json`
+- `results/metrics/module-c-v2/synthetic_v0.02.stderr.txt`
+- `results/metrics/module-c-v2/synthetic_v0.1.command.json`
+- `results/metrics/module-c-v2/synthetic_v0.1.json`
+- `results/metrics/module-c-v2/synthetic_v0.1.stderr.txt`
+- `results/metrics/module-c-v2/synthetic_v0.3.command.json`
+- `results/metrics/module-c-v2/synthetic_v0.3.json`
+- `results/metrics/module-c-v2/synthetic_v0.3.stderr.txt`
+- `results/metrics/module-c-v2/validation.json`
+- `results/metrics/module-c-v2/FILES.md`

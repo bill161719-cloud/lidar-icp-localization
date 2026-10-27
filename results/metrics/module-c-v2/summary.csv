@@ -1,0 +1,11 @@
+experiment,source_frame,target_frame,voxel_size_m,max_iterations,max_correspondence_distance_m,evaluation_distance_m,max_rmse_m,initial,source_input_points,source_output_points,target_input_points,target_output_points,exit_code,converged,accepted,fitness_m2,rmse_m,inliers,inlier_ratio,elapsed_ms,translation_error_m,rotation_error_rad,rejection_reason
+synthetic_v0.02,source.pcd,target.pcd,0.02,100,1.0,0.2,0.1,identity,2400,2379,2400,2377,0,True,True,6.369283756e-07,0.0007980833413,2379,1,165.1475,3.04784994e-05,3.693598627e-06,
+synthetic_v0.1,source.pcd,target.pcd,0.1,100,1.0,0.2,0.1,identity,2400,2005,2400,2020,0,True,True,0.0002194317598,0.01481322566,2005,1,175.2927,0.002141958272,0.0003452716532,
+synthetic_v0.3,source.pcd,target.pcd,0.3,100,1.0,0.2,0.1,identity,2400,776,2400,830,0,True,True,0.01013218342,0.0988983437,768,0.9896907216,107.3335,0.0304634081,0.004635075389,
+synthetic_noise_outliers,outlier_source.pcd,noisy_target.pcd,0.1,100,1.0,0.2,0.1,identity,2640,2245,2400,2069,0,True,True,43.9802139,0.03636574531,2005,0.8930957684,197.9525,0.001055014882,0.000291699261,
+synthetic_bad_initial,source.pcd,target.pcd,0.1,100,1.0,0.5,0.2,build-pcl\experiments-v2\bad_initial.txt,2400,2005,2400,2020,4,False,False,2267.124329,,0,0,18.5065,,,icp_not_converged
+synthetic_partial,source.pcd,partial_target.pcd,0.1,100,1.0,0.2,0.1,identity,2400,2005,240,235,4,True,False,0.8838078771,0.1529184424,203,0.1012468828,418.9968,,,low_inlier_ratio
+kitti_v0.1,0000000001.pcd,0000000000.pcd,0.1,100,1.0,0.5,0.2,identity,123683,62228,123397,62215,0,True,True,0.05686510349,0.1294057068,60104,0.9658674552,10410.2547,,,
+kitti_v0.3,0000000001.pcd,0000000000.pcd,0.3,100,1.0,0.5,0.2,identity,123683,22640,123397,22607,0,True,True,0.1061503344,0.1692475275,21252,0.9386925795,3456.8562,,,
+kitti_v0.6,0000000001.pcd,0000000000.pcd,0.6,100,1.0,0.5,0.2,identity,123683,9709,123397,9670,4,True,False,0.1778345303,0.2256860548,8754,0.9016376558,1108.1586,,,invalid_or_high_rmse
+kitti_strict_gate,0000000001.pcd,0000000000.pcd,0.3,100,1.0,0.5,0.01,identity,123683,22640,123397,22607,4,True,False,0.1061503344,0.1692475275,21252,0.9386925795,3394.9945,,,invalid_or_high_rmse

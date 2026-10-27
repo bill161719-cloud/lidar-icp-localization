@@ -1,14 +1,17 @@
 # GitHub 发布前准备记录
 
+状态更新：用户已于2026-10-27自行创建Public仓库并明确授权推送，实际发布见 [PUBLICATION](PUBLICATION.md)。
+以下保留准备阶段的检查与计划，不应将当时“未推送”误读为当前状态。
+
 日期：2026-10-27（Asia/Shanghai）。计划名称：lidar-icp-localization；计划可见性：Public。
-当前只完成本地整理、验证和提交；未创建远程、未配置origin、未执行push。
+准备阶段当时仅完成本地整理、验证和提交；尚未创建远程、配置origin或push。
 第二轮独立报告受审代码为3bdc6c4，本轮不改源码、测试、构建脚本或实验归档，只整理展示/状态及忽略规则。
 
 ## 发布依据与保留边界
 
 - REVIEW_REPORT_V2 在教学与工程展示范围通过；两项原P1关闭，无新增P0/P1，验证器P2和版本策略通过。
 - 重复结构P2是风险处置通过，仍保留5m错误匹配反例，不表述为算法已消除歧义。
-- V01、R01由主对话核验证据后标DONE；R02保持TODO，等待用户明确批准公开发布。
+- 准备阶段V01、R01由主对话核验证据后标DONE；R02当时保持TODO，后续实际状态以TASKS/PROGRESS为准。
 - 不是完整SLAM/FAST-LIO；无LiDAR-IMU紧耦合、通用抗退化、真实轨迹精度或实时性能声明。
 - KITTI单帧对的内点RMSE不等于车辆定位误差；PCL交互Render、其他平台等未验证事项保持限制。
 
@@ -57,11 +60,11 @@
 没有新发现的第三方权利冲突证据；不声称仅靠源码扫描能证明全部最终法律权属。
 本次不分发二进制，未来打包exe/依赖或改变实际用途时需另核查分发范围及通知。
 
-## 等待批准后的步骤（本轮未执行）
+## 准备阶段拟定的发布步骤（后续执行见PUBLICATION）
 
 按 [GitHub 官方导入本地仓库流程](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)：
 
-1. 明确GitHub所属账户/组织及最终要发布的main提交；当前未检查账户权限、仓库名占用或推送认证。
+1. 明确GitHub所属账户/组织及最终要发布的main提交；准备阶段未检查账户权限、仓库名占用或推送认证。
 2. 获得用户明确批准后，创建名为lidar-icp-localization的空Public仓库；
    不勾选自动生成README、LICENSE或.gitignore，避免与本地历史冲突。
 3. 在本项目根目录核对状态及remote，替换下面的OWNER为批准的账户名后执行：
@@ -79,4 +82,5 @@ git push -u origin main
 4. 推送后核对远程Public可见性、main提交、README图片/链接和许可范围。
    建议描述：C++17/PCL/Eigen两帧LiDAR点云配准与相对位姿估计，附可复现实验及失败分析。
 
-创建、认证检查、推送与远程页面验收均待批准后实际执行，当前不能标成已完成。
+以上是准备阶段计划。之后用户网页创建仓库并授权，本地添加origin、普通推送和公开页面核验见PUBLICATION。
+本地未重复创建仓库、重新init或重写历史。

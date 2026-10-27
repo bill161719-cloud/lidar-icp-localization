@@ -60,7 +60,8 @@ Eigen 3.4.0 的实际源码 COPYING.README 已重新读取，主要 MPL-2.0，�
 Eigen 许可依据本机固定 3.4.0 源码（官网入口本轮抓取失败，不冒称在线复核成功）。
 
 源码署名及 MIT 选择已由用户确认；第二轮独立复审已在教学/工程展示范围通过，见 REVIEW_REPORT_V2。
-剩余条件为实际用途符合第三方许可，以及用户明确批准公开发布。
+用户已明确批准推送至bill161719-cloud/lidar-icp-localization；已按当前范围发布，记录见PUBLICATION。
+实际使用和再分发仍须符合相应第三方许可。
 涉及学校/雇主/共同作者等新权利证据时再补充核实；当前没有擅自给这些主体署名。
 
 Python 实验依赖未随仓库分发：NumPy 2.4.4 与 Matplotlib 3.10.8，版本锁见 tools/requirements-experiments.txt。

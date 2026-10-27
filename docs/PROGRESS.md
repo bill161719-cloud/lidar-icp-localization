@@ -1,63 +1,47 @@
 # 项目进度
 
-更新时间：2026-10-27（Asia/Shanghai）。当前阶段：教学与工程展示范围独立审查通过，GitHub本地发布准备完成。
+更新时间：2026-10-27（Asia/Shanghai）。当前阶段：已按用户授权发布至GitHub Public仓库。
 
-## 当前结论
+## 当前状态
 
-- 本轮起点main=3bdc6c40c54da00ff1a0e0b5a8fb18c16277dd2a；开始时仅REVIEW_REPORT_V2.md未跟踪，无已跟踪修改。
-- 第二轮独立报告明确：两项P1关闭，无新P0/P1，验证器P2及版本策略通过；重复结构歧义保留为已披露局限。
-- 主对话读取并核对复审及本轮实测证据后，将V01、R01标DONE；R02保持TODO，等待用户明确公开发布批准。
-- 未创建GitHub仓库、未添加origin、未push；账户/组织、仓库名占用和推送权限未检查，不标为完成。
-- 本轮仅整理README、管理文档、忽略规则和纳入复审原报告；C++源码、测试、工具/构建脚本和实验原件未改。
+- 仓库：https://github.com/bill161719-cloud/lidar-icp-localization
+- 用户网页创建仓库并明确授权推送；本地只添加精确origin、普通push，不重新init、不重写历史。
+- 首次发布基线a1b9bd10f57fef88e67c1728a8d43c5535c495db；GitHub接口确认main与本地一致，origin/main上游已建立。
+- V01、R01、R02均DONE：第二轮独立复审通过、本地准备完成、远程发布与公开内容核验完成。
+- 发布状态文档单独提交后同步普通推送，最终远程main/本地HEAD一致及干净状态以build/github-final-git-state.json和git实际查询为准。
 
-## 审查链与许可
+## 本次远程检查
 
-1. 首轮REVIEW_REPORT.md在4bc4e13发现P1/P2/P3，历史“不通过”结论原样保留。
-2. 3bdc6c4完成工程整改，REMEDIATION_REPORT记录实际修复与反例；未将重复结构风险虚称已消除。
-3. REVIEW_REPORT_V2.md独立重建、CTest10/10、36组复现、六图核验和额外篡改检查通过，允许按当前范围进入发布流程。
-
-两轮报告SHA256均保持不变：
-
-- V1：3e18e926978b461dcaa10fd864d81044e601d23da2c43dc00037df748822f0b0
-- V2：7a5569bfcb36d94c80555e08d02bd848cced9d7856e8471d1a54d3e111aaf580
-
-用户确认原创MIT、Copyright (c) 2026 Wang Chenqi；LICENSE已具备。
-PCL匹配上下文保留BSD通知，PCL/Eigen等依赖和KITTI道路/混合成果不纳入项目MIT；范围见THIRD_PARTY及各ATTRIBUTION。
-当前无新的技术/许可文件阻断项，不表示对全部最终法律权属、任何商业用途或未来二进制分发作保证。
-
-## 本轮发布前实际验证
-
-保持Windows11、UCRT64 GCC16.2.0、C++17、PCL1.15.1、Eigen3.4.0、CMake3.31.6。
-
-| 检查 | 实际结果 | 本地证据（Git忽略） |
+| 检查 | 结果 | 本地证据（Git忽略） |
 |---|---|---|
-| 新目录build-release-ready | 全新Release配置/构建通过，严格固定版本ON | build/release-ready-build.log |
-| 完整CTest | 10/10，0失败，4.26s；依赖探针通过 | 同上及新构建LastTest.log |
-| 原36组归档全量核验 | 36报告、46输入、16源码、6图、35参考案例及辅助几何检查通过 | build/release-ready-archive-validation.json |
-| 新二进制代表性端到端实验 | 人工0.02、KITTI0.3/0.6，除耗时外全字段一致，退出0/0/4 | build/release-ready-cli-verification.json |
-| 忽略规则 | 20个正反例通过 | build/release-ready-ignore-check.json |
-| 许可/报告保护 | 原创署名/范围、上游通知及两轮SHA核对通过 | build/release-ready-license-report-check.json |
-| 当前文件及可达历史扫描 | 无原始点云/编译产物/超10MiB文件，常见隐私与凭据模式无匹配，链接/六PNG检查通过 | build/release-ready-publication-audit.json |
+| 目标与空仓库 | 首次ls-remote零refs；接口核对Public、所有者、名称和完整clone_url | 推送前实际命令/接口响应 |
+| 首次普通push | main新分支成功，无强制覆盖，上游建立 | build/github-initial-push.log |
+| 首次远程文件树 | 325文件blob与本地a1b9bd1完全相同 | build/github-first-tree-comparison.json |
+| 公开首页及文件 | HTTP200，README渲染两张对比图；12文件含六PNG与Git提交逐字节相同、PNG校验通过 | build/github-first-curl-http-verification.json |
+| 最终状态同步 | 文档提交再push，远程main/文件树/全部祖先提交核对；公开页面与文件再次校验 | build/github-final-push.log、github-final-git-state.json、github-final-tree-comparison.json、github-final-curl-http-verification.json |
 
-本轮没有重跑全部36组或重新下载KITTI：完整重跑证据来自第二轮独立报告，本轮重核归档并实际复跑三案。
-KITTI0.3m：accepted=true、内点RMSE0.1692475275m、内点率0.9386925795；
-0.6m：converged=true但拒绝、RMSE0.2256860548m、有效pose/T为null。
-人工0.02m真值平移误差3.04784994e-5m、旋转误差3.693598627e-6rad。
+Python公开HTTP检查初次读取超时，改用curl成功复验；失败日志保留，不将其计为成功。
+没有要求用户提供密码/Token；没有创建额外Tag/Release或推送其他feature分支。
 
-## 展示、文件与限制
+## 既有工程验收与审查链
 
-README首屏展示真实道路配准图、技术栈、审查范围和结果，补齐4×4变换、复现、局限和后续方向。
-当前WORKTREES改为相对目录；保留ENVIRONMENT的可覆盖MSYS2默认安装示例。
-历史中非敏感项目路径保留，不重写Git历史；没有声称所有绝对路径从历史消失。
-发布对象为源码/文档/小型结果，不含本地依赖、原始道路点云或exe；大小以最终本机audit和git ls-tree结果为准。
-静态模式扫描不是所有类型隐私/密钥的完整性证明。
+本次没有改受审代码、测试、构建脚本或实验原件，没有再次重建依赖/重跑全部实验。
+最近发布前全新build-release-ready：Release/PCL ON/严格固定版本，CTest10/10，0失败，4.26s。
+36报告、46输入、16源码及六图全量核验通过；新二进制另复跑人工0.02、KITTI0.3/0.6三案，除耗时外一致。
+证据见RELEASE_READINESS、build/release-ready-build.log、release-ready-archive-validation.json和release-ready-cli-verification.json。
 
-仍不是完整SLAM或FAST-LIO，无LiDAR-IMU紧耦合；KITTI匹配RMSE不是车辆真实定位精度。
-重复位置5m错误、直线/对称网格歧义仍存在，accepted/converged不保证物理位姿正确。
-只有单道路帧对和有界实验；交互PCL Render、其他平台、完整内存检测、多帧轨迹/漂移未验收。
+- 第一轮REVIEW_REPORT的问题和不通过历史结论保留；3bdc6c4整改自检见REMEDIATION_REPORT。
+- 第二轮REVIEW_REPORT_V2在教学/工程展示范围通过：两个P1关闭，无新P0/P1；验证器P2和版本策略通过。
+- 重复位置反例的风险处置通过，不等于已消除算法歧义。
+- 两轮报告原文SHA仍为3e18e926978b461dcaa10fd864d81044e601d23da2c43dc00037df748822f0b0及7a5569bfcb36d94c80555e08d02bd848cced9d7856e8471d1a54d3e111aaf580。
 
-## 下一步
+KITTI0.3m：accepted=true、RMSE0.1692475275m、内点率0.9386925795；0.6m收敛但RMSE0.2256860548m超限被拒绝。
+人工0.02m真值平移误差3.04784994e-5m、旋转误差3.693598627e-6rad；六图有真实输入/矩阵/哈希溯源。
 
-本轮最终main提交及干净状态由git log/status实际查询。全部既有提交和两轮审查记录保留。
-收到用户明确批准后，确认所属账户/组织，按RELEASE_READINESS创建空Public仓库并只推送main；
-在此之前不执行任何远程创建、remote add或push。远程展示与可见性验收届时再实际完成。
+## 发布范围与后续
+
+原创内容MIT，Copyright (c) 2026 Wang Chenqi；第三方依赖和KITTI道路/混合成果保留原许可，不上传原始道路点云、依赖或exe。
+不是完整SLAM/FAST-LIO，无LiDAR-IMU紧耦合；KITTI内点RMSE不代表车辆定位精度。
+重复位置5m错误、直线/对称网格歧义仍存在，收敛/accepted不保证物理位置正确。
+交互PCL Render、其他平台、完整内存检测器、多帧漂移及通用鲁棒性仍未验收。
+后续只在用户要求的新任务范围维护；发布事实和远程验证见PUBLICATION。

@@ -40,4 +40,4 @@ REVIEW_REPORT_V2 已对3bdc6c4完成独立复审：两个P1关闭，无新P0/P1�
 主对话据此将V01验收为DONE，发布前构建、测试和文件检查见RELEASE_READINESS。
 两帧点云配准/相对位姿功能可展示；不含完整SLAM、FAST-LIO、LiDAR-IMU紧耦合或通用退化检测。
 PCL交互Render等未验证项目保持原限制，不因范围验收通过被标成已实现。
-公开远程创建与推送仍需要用户明确批准。
+用户已在网页创建Public仓库并明确授权推送，实际发布与远程验收见PUBLICATION；不将发布扩展为上述未实现能力。

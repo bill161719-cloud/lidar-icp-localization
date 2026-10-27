@@ -5,7 +5,8 @@
 
 **不是完整 SLAM 系统；未实现 FAST-LIO 或 LiDAR–IMU 紧耦合融合。**
 [第二轮独立复审](docs/REVIEW_REPORT_V2.md)已在教学与工程展示范围通过：全新 Release、**CTest 10/10**、**36 组实验**及六张结果图核验。
-当前为本地发布准备完成状态，尚未创建或推送 GitHub 仓库。
+项目已发布至 [GitHub：bill161719-cloud/lidar-icp-localization](https://github.com/bill161719-cloud/lidar-icp-localization)。
+发布验证与历史记录见 [PUBLICATION](docs/PUBLICATION.md)。
 
 ![KITTI 相邻帧配准前后](results/figures/module-c-v2/kitti_alignment.png)
 
@@ -163,5 +164,5 @@ KITTI道路图、道路报告及混合CSV/provenance/validation另按相应CC BY
 具体来源、署名和范围见 [THIRD_PARTY](docs/THIRD_PARTY.md)及各目录ATTRIBUTION.md。
 项目使用Codex辅助开发，实际代码、测试、实验和个人贡献可检查；不据此认定第三方权利已被法律保证。
 
-当前通过教学/工程展示范围的独立复审。尚未创建公开远程或推送；后续仅在用户明确批准后，
-按 [发布步骤](docs/RELEASE_READINESS.md)创建空的Public仓库并推送已审核main。
+当前通过教学/工程展示范围的独立复审，已按用户明确授权推送至Public仓库。
+发布采用普通Git推送，保留完整main历史；[发布记录](docs/PUBLICATION.md)与[发布前检查](docs/RELEASE_READINESS.md)均可追溯。

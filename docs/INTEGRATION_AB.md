@@ -25,6 +25,7 @@ T_target_source、单向最近邻 RMSE、fitness m²、输入不变、真值/逆
 | 初版流水线与 CLI | CTest 8/8，9 个 CLI 场景 | build/integration-pipeline.log |
 | 新增微小角度回归，修复前 | test_pose 失败，真实暴露 trace/acos 精度问题 | build/pose-angle-regression-before-fix.log |
 | 修复后完整重新配置/构建 | CTest 8/8，含全部模块测试和 9 个 CLI 场景 | build/integration-final.log |
+| C worktree 快进至 be35e0c 后重新构建 | CTest 8/8，9 个 CLI 场景通过，未复制/重建 PCL | build/module-c-after-integration.log |
 
 环境：PCL 1.15.1、项目 Eigen 3.4.0、UCRT64 GCC 16.2.0、CMake/CTest 3.31.6、C++17、Release。
 构建和测试通过 tools/verify_dependencies.ps1 执行，依次传入
@@ -80,6 +81,9 @@ tests/test_pipeline.py 用标准库生成测试专用 ASCII PCD/真值文件，�
 本次最终人工数据原始目录：build-integration-ab/test-pipeline/run-65yh8v6b。
 每次测试保留输入 PCD、矩阵、命令 JSON、stdout JSON、stderr 和退出码文件，不删除结果。
 汇总保存在 build/integration-summary.json；CTest 原始日志在 build-integration-ab/Testing/Temporary/LastTest.log。
+README 的直接 CLI 命令也已运行成功，stdout/stderr 保存在 build/manual-cli.stdout.json、build/manual-cli.stderr.log。
+故意失败回归的 LastTestsFailed 列表已保留归档为 build/pose-angle-regression-last-failed.log，
+不让旧失败列表与最新成功结果混淆；最终完整成功记录保留于原 LastTest.log。
 
 ## 警告分析与局限
 
@@ -94,4 +98,5 @@ aligned_malloc/aligned_free，shared_ptr 的派生 _M_destroy 使用分配器 gu
 仍未完成：真实道路数据、系统噪声/离群点/初值扫描、退化或对称几何识别、真实 GUI 渲染与截图。
 质量门禁是保守应用策略，不能排除全部局部最优；体素过小/范围过大会触发 A 的网格范围拒绝。
 没有实现多帧里程计、地图、回环、IMU 或完整 SLAM。
-模块 C 可以从最新集成 main 开始 C01/C02，随后补完整实验和图像；先同步旧 worktree。
+模块 C 的旧 worktree 已从干净的 4cfce35 安全快进至 be35e0c，并在自身目录完成 8/8；
+只再同步进度文档提交后即可从最新 main 开始 C01/C02，随后补完整实验和图像。

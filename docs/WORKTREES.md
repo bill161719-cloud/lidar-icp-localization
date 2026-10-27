@@ -54,3 +54,11 @@ Eigen3_DIR 必须指向主目录 `.local-deps/eigen-3.4.0/share/eigen3/cmake`，
 模块实现提交必须附任务编号、文件清单、分支/提交、实际构建与测试结果、遗留问题。
 模块不得修改 TASKS/PROGRESS 自行标 DONE；主对话审核与完整测试后更新状态。
 模块代码和实验尚未开始，只有环境准备可标 DONE。
+
+## A/B 首轮集成后的状态
+
+A/B 已完成交付并被 main 合并；A worktree 保留 24fc233、B 保留 3236706，未改写它们的原始提交。
+main 的应用流水线、质量门禁、微小旋转误差修复和 9 个 CLI 场景验收位于 be35e0c。
+C worktree 已从 4cfce35 快进到该集成提交，自身重新配置/编译/CTest 8/8 通过；日志在主目录 build/module-c-after-integration.log。
+最终进度文档随后快进同步，最终 HEAD 以 git 命令为准。C 可以直接在原文件夹启动，无需重建 worktree 或 PCL。
+后续若 A/B 继续开发，先由主对话协调同步 main 的集成修复，不能从旧交付提交继续覆盖数值修复。

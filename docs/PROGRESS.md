@@ -28,6 +28,7 @@
 | 微小旋转新增回归（修复前） | test_pose 实际失败，未跳过 | build/pose-angle-regression-before-fix.log |
 | 数值修复后完整重新配置/构建 | CTest 8/8；9 个 CLI 场景全部通过 | build/integration-final.log |
 | 关闭 PCL 的最小模式回归 | CTest 3/3；只提供帮助/版本 | build/bootstrap-final.log |
+| C worktree 同步集成提交后独立构建 | Release CTest 8/8，9 个 CLI 场景通过 | build/module-c-after-integration.log |
 
 使用 PCL 1.15.1、独立 Eigen 3.4.0、UCRT64 GCC 16.2.0、CMake/CTest 3.31.6，C++17、Release、Jobs=1。
 最终验收命令：tools/verify_dependencies.ps1 -BuildDirectory build-integration-ab -Jobs 1。
@@ -55,10 +56,11 @@ test_pipeline 是 1 项 CTest，内部 9 个 unittest 方法，不把内部场�
 |---|---|---|---|
 | A | D:/CodexProgects/lidar-icp-module-a | feature/cloud-processing | 保留原交付提交，未改写 |
 | B | D:/CodexProgects/lidar-icp-module-b | feature/icp-registration | 保留原交付提交，数值修复位于 main |
-| C | D:/CodexProgects/lidar-icp-module-c | feature/experiments | 已核查干净，旧基线 4cfce35，待集成提交后快进 |
+| C | D:/CodexProgects/lidar-icp-module-c | feature/experiments | 已从干净旧基线 4cfce35 快进至 be35e0c，并实际完成 8/8 复验 |
 
-C 可正式启动；启动前须同步最新 main（含 A/B、质量门禁、CLI 和数值修复）。
-主对话将只在 C 仍干净、无分叉新工作时快进并复验；不覆盖未知改动。
+C 可正式启动；已同步包含 A/B、质量门禁、CLI 和数值修复的 main，且 C worktree 本身复验通过。
+随后只同步本次进度文档提交，源码与 be35e0c 相同；最终启动 HEAD 以 git worktree list 为准。
+同步前实际检查分支、旧 HEAD 和干净状态，未覆盖任何 C 工作；C 算法/生成器仍未开发。
 各树复用主目录 .local-deps/.local-tools，不复制或重建 PCL；正确参数见 WORKTREES.md。
 
 初始化、依赖安装和 worktree 准备的历史验收分别见 INITIALIZATION.md、ENVIRONMENT.md、WORKTREES.md。

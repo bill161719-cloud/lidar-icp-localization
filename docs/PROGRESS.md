@@ -1,5 +1,17 @@
 # 项目进度
 
+## 第一轮 A/B 集成（进行中）
+
+- main 集成前为 4cfce35，工作区干净；已核实 A=24fc233、B=3236706 的所有改动均在约定所有权内。
+- A 已审查并合入工作区，使用固定依赖在 build-integration-a 全新目录完成 Release 配置/编译，CTest 5/5。
+  test_cloud_processor 的 6 组检查全部通过（读取编码、无效输入、有限点、体素与统计），原始日志 build/integration-a.log。
+- A01 由主对话验收为 DONE；B01/B02 为 REVIEW，等待 B 合入后的完整测试及集成质量检查。
+- GCC 的 mismatched-new-delete 诊断实际来自 Eigen aligned_allocator/PCL make_shared/std shared_ptr 的内联路径；
+  未屏蔽警告、未改依赖；需结合对齐配置和分配/释放路径继续记录分析，不因测试通过而宣称内存安全已穷尽验证。
+- 下一步按顺序集成 B，先跑完整模块回归，再补主程序数据链路和端到端质量门禁。
+
+下方保留初始化、依赖和 worktree 准备阶段记录；其“尚未启动模块”描述仅代表当时状态。
+
 更新时间：2026-10-27（Asia/Shanghai），模块 Worktree 准备阶段；不实现模块算法。
 
 ## 已完成

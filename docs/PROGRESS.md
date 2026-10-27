@@ -5,10 +5,13 @@
 - main 集成前为 4cfce35，工作区干净；已核实 A=24fc233、B=3236706 的所有改动均在约定所有权内。
 - A 已审查并合入工作区，使用固定依赖在 build-integration-a 全新目录完成 Release 配置/编译，CTest 5/5。
   test_cloud_processor 的 6 组检查全部通过（读取编码、无效输入、有限点、体素与统计），原始日志 build/integration-a.log。
-- A01 由主对话验收为 DONE；B01/B02 为 REVIEW，等待 B 合入后的完整测试及集成质量检查。
+- A01 由主对话验收为 DONE；A 合并提交为 cae8e11。
+- B 已审查并合入工作区，build-integration-ab 全新 Release 构建和完整 CTest 7/7 通过，日志 build/integration-ab.log。
+  B01/B02 的 API、真值/初值、逆变换、非法输入、失败及独立误差指标验收通过，标记 DONE。
+- M01 仍为 IN_PROGRESS：原模块 API 通过不代表完整应用通过；主程序、质量门禁和端到端测试正在集成。
 - GCC 的 mismatched-new-delete 诊断实际来自 Eigen aligned_allocator/PCL make_shared/std shared_ptr 的内联路径；
   未屏蔽警告、未改依赖；需结合对齐配置和分配/释放路径继续记录分析，不因测试通过而宣称内存安全已穷尽验证。
-- 下一步按顺序集成 B，先跑完整模块回归，再补主程序数据链路和端到端质量门禁。
+- 下一步补主程序数据链路和端到端质量门禁，拒绝未收敛及零/低内点率结果作为有效位姿。
 
 下方保留初始化、依赖和 worktree 准备阶段记录；其“尚未启动模块”描述仅代表当时状态。
 

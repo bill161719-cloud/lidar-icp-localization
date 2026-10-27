@@ -58,7 +58,18 @@ T_target_source = [ r21 r22 r23 ty ]
 C++ 接口与算法实现在 `include/`、`src/`；自动化测试位于 `tests/`，实验工具和输出位于 `tools/`、`results/`。
 [技术架构](docs/ARCHITECTURE.md)与[接口约定](docs/INTERFACES.md)说明各模块职责、变换方向和错误处理。
 
-## 实验结果
+## 真实数据与点云可视化
+
+<p align="center">
+  <img src="results/figures/module-c-v2/kitti_raw.png" alt="KITTI 道路三维点云" width="720">
+</p>
+
+KITTI 帧1的原始道路点云，以 XYZ 空间坐标（米）展示，颜色按 Z 高度映射；采用 Velodyne 的 x前、y左、z上坐标约定。
+该图是 **Matplotlib 静态可视化**，不是实时 PCL 交互窗口。图中每5点显示1点并裁剪局部视窗，用于观察道路场景的三维结构；显示抽样不改变配准输入。
+
+[查看原图](results/figures/module-c-v2/kitti_raw.png) · [数据来源与派生成果署名](results/figures/module-c-v2/ATTRIBUTION.md)
+
+## 实验结果与参数分析
 
 人工实验使用固定种子的非对称三维点集，构造 `target=T_gt*source`；真值仅用于评分，不参与 ICP 求解或初始化。
 道路实验对同一 KITTI 相邻帧对使用不同体素边长，比较局部匹配质量及质量门禁行为。
@@ -75,6 +86,17 @@ C++ 接口与算法实现在 `include/`、`src/`；自动化测试位于 `tests/
 
 0.6 m 体素案例展示了“ICP 收敛”与“质量接受”的区别；重复结构案例则用于分析局部残差与真实位姿唯一性的关系。
 原始报告、配置、命令及 CSV 见 [实验归档](results/metrics/remediation/ATTRIBUTION.md)与[实验记录](docs/EXPERIMENTS.md)。
+
+### 体素大小与配准残差
+
+![人工与KITTI数据的体素边长—内点RMSE对比](results/figures/module-c-v2/voxel_comparison.png)
+
+左图为合成真值数据（体素边长0.02、0.1、0.3 m），右图为同一 KITTI 帧对（0.1、0.3、0.6 m）；纵轴均为内点 RMSE（米）。
+本次测试中，较粗体素对应更高的内点残差；KITTI 0.6 m 的点仍展示其诊断 RMSE，但该结果已因超过0.2 m门限被拒绝。
+曲线只反映 **当前数据、初值和配准配置**，不能据此推导所有场景的最优体素大小；KITTI 内点 RMSE 也不是车辆定位精度。
+
+曲线中的道路子图及整张混合图沿用[派生图片署名与许可](results/figures/module-c-v2/ATTRIBUTION.md)。
+合成验证补充图：[原始三维点云](results/figures/module-c-v2/synthetic_raw.png)、[配准前后对比](results/figures/module-c-v2/synthetic_alignment.png)、[真值误差曲线](results/figures/module-c-v2/synthetic_errors.png)，按需打开查看。
 
 ## 环境与快速运行
 

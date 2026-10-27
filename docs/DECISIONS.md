@@ -33,3 +33,12 @@
 - 保存源码 commit、pacman 版本/缓存哈希和可重复构建/验证脚本；二进制、原始源码和日志仍不进入 Git。
 - 实际验收：所选 PCL 库完成构建安装，已有 build-pcl 和全新 build-pcl-clean 各 4/4 CTest 通过；
   只解除依赖阻塞，不标记 A/B/C 算法或真实渲染已完成。
+
+## 2026-10-27 模块开发准备
+
+- 三个 worktree 放在主目录之外的同级模块目录，复用 Git common-dir 所在主目录的依赖与 CMake，
+  使用显式脚本参数，不复制/软链依赖，不写入全局 PATH。
+- 主对话预先配置按源文件存在性启用的 cloud_processing、pose_utils、icp_registration、generate_test_data
+  与 A/B 测试目标，解决模块不能改 CMake 却需要独立编译测试的问题；不提前创建任何算法实现。
+- 接口 v1.1 明确 B 输入全部为有限点、evaluateAlignment 可接受少于 3 点；固定 C 生成器 CLI 和拒绝覆盖规则。
+  函数签名和既定变换方向保持一致；A/B 可独立构造测试数据并行开发。

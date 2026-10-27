@@ -1,4 +1,4 @@
-# 接口契约 v1
+# 接口契约 v1.1
 
 本文件是模块开工依据。以下头文件由所属模块在功能阶段创建；初始化不提供伪实现。
 共享类型已落盘于 include/cloud_types.h。所有声明均位于 `namespace lidar`。
@@ -75,7 +75,9 @@ IcpResult registerIcp(const CloudConstPtr& source, const CloudConstPtr& target,
 }
 ```
 
-输入至少各 3 个有限点；配置迭代数 >0，距离 >0 且有限，epsilon >=0 且有限。
+registerIcp 输入点云必须全部 XYZ 有限且各至少 3 点；NaN/Inf 不在 B 中隐式清理，出现则抛 invalid_argument。
+evaluateAlignment 输入非空、全部 XYZ 有限，不要求 3 点；max_distance_m 有限且 >0。
+配置迭代数 >0，距离 >0 且有限，epsilon >=0 且有限。
 初值必须合法 SE(3)，结果包含初值累积后的最终变换，不是额外增量。
 ICP 局部最优，hasConverged 不代表匹配正确。未收敛时矩阵和 aligned 只作诊断，主程序不得作为有效位姿。
 fitness_m2 明确采用 PCL getFitnessScore() 默认无限范围的单向最近邻平方距离均值，单位 m²，
@@ -123,11 +125,32 @@ double rotationErrorRad(const Eigen::Matrix4f& estimated,
 
 ## 模块 C 与主程序
 
-生成器建议 CLI：`generate_test_data --output <dir> --seed <uint>`，输出 source.pcd、target.pcd、
-truth.txt（4×4 T_target_source）和元信息（种子、参数、单位、方向、许可）。最终参数由主对话接入。
+生成器 v1 必须支持 CLI：`generate_test_data --output <dir> --seed <uint>`，输出 source.pcd、target.pcd、
+truth.txt（4×4 T_target_source，逐行空白分隔、无标题）和 metadata.json（种子、参数、单位、方向、许可）。
+必须支持 --help；seed 为 uint32 十进制，同种子/配置在同一工具链下复现相同输出；
+输出目录可新建，但存在同名输出文件时拒绝覆盖，返回非零。其他生成参数由 C 提建议给主对话。
 真实 .bin 按每点四个小端 float32 x,y,z,intensity 读取；长度必须为 16 字节整数倍，验证有限性，禁止当文本。
 记录数据集版本/序列/帧号/许可、转换、外参方向、是否去畸变；无标定不跨相机/LiDAR比较。
 计划 CLI：`lidar_icp --source <pcd> --target <pcd> [--initial <matrix.txt>] [--visualize]`，尚未实现。
 退出码约定：0 成功；2 参数/输入错误；3 运行或 IO 错误；4 ICP 未收敛或质量拒绝。
 CSV 至少包含帧 ID、配置、点数、converged、fitness_m2、rmse_m、inliers、inlier_ratio、elapsed_ms、
 有真值时的 translation_error_m、rotation_error_rad；未知写空值或 NaN，禁止写 0 伪装已测。
+
+## 模块编译与自动测试入口
+
+主对话已配置按源文件存在性启用目标；模块不改共享 CMakeLists.txt，不创建占位实现来伪装完成。
+添加新文件后必须重新执行 CMake 配置（verify_dependencies.ps1 会自动配置），不能只执行旧 build。
+所有库使用 C++17，公开继承 lidar_project_options 与 lidar_dependencies（含 Eigen/PCL 和 include/）。
+
+| 模块 | 触发文件 | 库/程序目标 | CTest 可执行文件（需自带 main） |
+|---|---|---|---|
+| A | src/cloud_processor.cpp + include/cloud_processor.h | cloud_processing | tests/test_cloud_processor.cpp -> test_cloud_processor |
+| B 位姿 | src/pose_utils.cpp + include/pose_utils.h | pose_utils | tests/test_pose.cpp -> test_pose |
+| B 配准 | src/icp_registration.cpp + include/icp_registration.h；要求 pose_utils 已存在 | icp_registration，公开链接 pose_utils | tests/test_icp.cpp -> test_icp |
+| C | tools/generate_test_data.cpp | generate_test_data | 本阶段不预注册未实现的实验测试；C 提交明确的生成器/实验验证命令 |
+
+测试程序不依赖额外测试框架，使用显式条件判断和非零退出；测试工作目录固定为所属 worktree 根目录，
+临时文件写入 build*/ 下（自建唯一子目录），不得修改 data/sample 原始数据或源码，也不得依赖其他 worktree 的模块文件。
+A、B 可并行：B 测试自行构造有限点云，不依赖 A 的实现；B 先实现 B01，再实现 B02。
+C01 生成器可独立开发；C03 真实完整实验依赖主对话集成 A/B/C01 和 C02 的数据准备。
+当前 4 个依赖/bootstrap 测试不是 A/B/C 验收测试；模块交付后必须出现相应新测试并通过。

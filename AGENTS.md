@@ -30,6 +30,9 @@
 最小 bootstrap 的通过不代表 PCL/ICP 通过。模块验收需要 LIDAR_ENABLE_PCL=ON，注册相应 CTest。
 当前固定 PCL 1.15.1 和独立 Eigen 3.4.0；系统 pacman Eigen 5 不用于项目。先读 docs/ENVIRONMENT.md。
 用 tools/verify_dependencies.ps1 构建验证；独立 worktree 需传入共享 DependencyRoot/CMake 路径，避免重复安装或误选依赖。
+具体启动方式见 docs/WORKTREES.md。每个 worktree 独占自身 build*/，共享主目录依赖仅供读取；
+模块不得调用 build_dependencies.ps1、升级 pacman 包或改写共享依赖。
+主 CMake 已按文件存在性启用 A/B/C 库和 A/B 测试；添加文件后重跑验证脚本即可，不必改 CMake。
 禁止用 assert 作为唯一测试判断（Release 可能禁用）；失败返回非零并输出原因。
 ICP 测试包含已知真值、初值、不收敛和非法输入；可视化测试与无显示单元测试分离。
 

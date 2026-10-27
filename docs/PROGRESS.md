@@ -1,56 +1,63 @@
 # 项目进度
 
-更新时间：2026-10-27（Asia/Shanghai）。当前阶段：首次独立审查问题整改自检通过，等待独立复审。
+更新时间：2026-10-27（Asia/Shanghai）。当前阶段：教学与工程展示范围独立审查通过，GitHub本地发布准备完成。
 
 ## 当前结论
 
-- main整改起点4bc4e1346288b150e367c04576cae8f6c86c1ce7；开始时仅docs/REVIEW_REPORT.md未跟踪，无已跟踪修改。
-- 首次独立报告P0=0、P1=2、P2=2、P3=1，原结论未修改；报告SHA256为3e18e926978b461dcaa10fd864d81044e601d23da2c43dc00037df748822f0b0。
-- FIX01/FIX02/FIX04/FIX05修复自检通过；FIX03为重复结构风险处置/反例归档完成，不等于算法已消除歧义。
-- 用户已明确选择原创MIT、Copyright (c) 2026 Wang Chenqi；LICENSE与第三方范围已落盘，无同一许可决定待答。
-- V01仍为REVIEW，R01为REVIEW；不宣布独立审查全部通过，不创建远程、不推送、不新增算法模块。
+- 本轮起点main=3bdc6c40c54da00ff1a0e0b5a8fb18c16277dd2a；开始时仅REVIEW_REPORT_V2.md未跟踪，无已跟踪修改。
+- 第二轮独立报告明确：两项P1关闭，无新P0/P1，验证器P2及版本策略通过；重复结构歧义保留为已披露局限。
+- 主对话读取并核对复审及本轮实测证据后，将V01、R01标DONE；R02保持TODO，等待用户明确公开发布批准。
+- 未创建GitHub仓库、未添加origin、未push；账户/组织、仓库名占用和推送权限未检查，不标为完成。
+- 本轮仅整理README、管理文档、忽略规则和纳入复审原报告；C++源码、测试、工具/构建脚本和实验原件未改。
 
-## 逐项整改
+## 审查链与许可
 
-- P1-01：loadPcd对ASCII词元/列/点数严格校验，正常数值/NaN/Inf清理和三种编码保留。
-  原foo对照旧程序退出0/接受，新程序退出3/无stdout、无有效位姿；source/target两侧都覆盖。
-- P1-02：原创代码、文档、纯合成成果MIT；KITTI道路和混合成果不纳入MIT。
-  检查发现prepare_pcl_source.py引用上游匹配上下文，已标注并保留完整PCL BSD通知；未发现vendored库或第三方ICP求解器。
-- P2-01（报告顺序）：所有归档案例验证SE(3)、pose/diagnostic、argv/参数/输入溯源；完整输入时读初值/truth，显式source-root检查源码。
-  原全零T+伪造命令组合在旧验证器通过、新验证器拒绝；未默认把历史源码与当前版本混比。
-- P2-02：5m重复副本精确复现，低RMSE/内点率1仍接受错误位置。保留持续回归/说明，不添加任意阈值或声称退化检测。
-- P3-01：标准验证脚本启用严格固定版本模式；直接CMake对未测组合给出警告，可显式开启严格模式。
+1. 首轮REVIEW_REPORT.md在4bc4e13发现P1/P2/P3，历史“不通过”结论原样保留。
+2. 3bdc6c4完成工程整改，REMEDIATION_REPORT记录实际修复与反例；未将重复结构风险虚称已消除。
+3. REVIEW_REPORT_V2.md独立重建、CTest10/10、36组复现、六图核验和额外篡改检查通过，允许按当前范围进入发布流程。
 
-## 真实构建、测试与实验
+两轮报告SHA256均保持不变：
 
-保持Windows11/UCRT64 GCC16.2.0/PCL1.15.1/Eigen3.4.0/CMake3.31.6/C++17，不新装或重建依赖。
-build-remediation初始不存在，全新Release配置和全部C++目标编译通过。
-后续完整配置/构建/CTest最终10/10、退出0、3.95s；内部A7/7、工具5/5、验证器10/10、CLI11/11，不重复计为CTest总数。
+- V1：3e18e926978b461dcaa10fd864d81044e601d23da2c43dc00037df748822f0b0
+- V2：7a5569bfcb36d94c80555e08d02bd848cced9d7856e8471d1a54d3e111aaf580
 
-| 检查 | 结果 | 本地日志 |
+用户确认原创MIT、Copyright (c) 2026 Wang Chenqi；LICENSE已具备。
+PCL匹配上下文保留BSD通知，PCL/Eigen等依赖和KITTI道路/混合成果不纳入项目MIT；范围见THIRD_PARTY及各ATTRIBUTION。
+当前无新的技术/许可文件阻断项，不表示对全部最终法律权属、任何商业用途或未来二进制分发作保证。
+
+## 本轮发布前实际验证
+
+保持Windows11、UCRT64 GCC16.2.0、C++17、PCL1.15.1、Eigen3.4.0、CMake3.31.6。
+
+| 检查 | 实际结果 | 本地证据（Git忽略） |
 |---|---|---|
-| 全新Release/PCL ON/严格固定版本 | 成功 | build/remediation-release.log |
-| 最终完整回归 | CTest10/10 | build/remediation-final-regression-v2.log |
-| 36组CLI实验 | 原35+重复位置，实际重跑完成 | build/remediation-experiments-v2.log |
-| 输入/源码/图像/参考/几何核验 | 46输入、16源码、6图、35参考报告通过 | build/remediation-validation-v2.log |
-| 旧归档兼容性 | 历史35报告、42输入、6图通过；未要求当前源码等于旧源码 | build/remediation-historical-validation.log |
-| 缺陷修复前后及版本诊断 | 旧错误被接受/新拒绝；严格与告警逻辑正反例通过 | build/remediation-before-after.json、remediation-version-diagnostics.json |
+| 新目录build-release-ready | 全新Release配置/构建通过，严格固定版本ON | build/release-ready-build.log |
+| 完整CTest | 10/10，0失败，4.26s；依赖探针通过 | 同上及新构建LastTest.log |
+| 原36组归档全量核验 | 36报告、46输入、16源码、6图、35参考案例及辅助几何检查通过 | build/release-ready-archive-validation.json |
+| 新二进制代表性端到端实验 | 人工0.02、KITTI0.3/0.6，除耗时外全字段一致，退出0/0/4 | build/release-ready-cli-verification.json |
+| 忽略规则 | 20个正反例通过 | build/release-ready-ignore-check.json |
+| 许可/报告保护 | 原创署名/范围、上游通知及两轮SHA核对通过 | build/release-ready-license-report-check.json |
+| 当前文件及可达历史扫描 | 无原始点云/编译产物/超10MiB文件，常见隐私与凭据模式无匹配，链接/六PNG检查通过 | build/release-ready-publication-audit.json |
 
-公开证据results/metrics/remediation/保留36组原始JSON/command/stderr、CSV、provenance、validation、acceptance及对照摘要。
-原module-c-v2/main-review指标、图片与元信息保持不变，仅署名文件追加当前许可确认。
-本次使用既有本地道路数据并核对46输入哈希，重新执行实际C++实验；未重复下载PCL或借旧报告伪装新运行。
+本轮没有重跑全部36组或重新下载KITTI：完整重跑证据来自第二轮独立报告，本轮重核归档并实际复跑三案。
+KITTI0.3m：accepted=true、内点RMSE0.1692475275m、内点率0.9386925795；
+0.6m：converged=true但拒绝、RMSE0.2256860548m、有效pose/T为null。
+人工0.02m真值平移误差3.04784994e-5m、旋转误差3.693598627e-6rad。
 
-- 干净人工0.02m：平移误差3.04784994e-5m，旋转误差3.693598627e-6rad。
-- KITTI0.3m：accepted=true，内点RMSE0.1692475275m，内点率0.9386925795。
-- KITTI0.6m：converged=true/accepted=false，RMSE0.2256860548m；有效位姿null。
-- 重复位置：accepted=true，RMSE7.872274178e-8m，内点率1，真值平移误差5m。
-- 原35报告除路径/耗时外完全一致，六张重新绘图与原PNG逐字节一致；KITTI匹配RMSE不是车辆定位误差。
+## 展示、文件与限制
 
-## 失败、限制与下一步
+README首屏展示真实道路配准图、技术栈、审查范围和结果，补齐4×4变换、复现、局限和后续方向。
+当前WORKTREES改为相对目录；保留ENVIRONMENT的可覆盖MSYS2默认安装示例。
+历史中非敏感项目路径保留，不重写Git历史；没有声称所有绝对路径从历史消失。
+发布对象为源码/文档/小型结果，不含本地依赖、原始道路点云或exe；大小以最终本机audit和git ls-tree结果为准。
+静态模式扫描不是所有类型隐私/密钥的完整性证明。
 
-验证器初稿误认历史identity字段、后续离线测试试读缺少的历史truth路径，均保留失败日志并修正，最终完整测试通过。
-没有放松SE(3)/指标门限、跳过失败、屏蔽第三方警告或修改依赖源码。
-项目仍非完整SLAM/FAST-LIO；没有通用退化检测、参考轨迹/多帧漂移或PCL交互Render验收。
-源码许可选择已解决；第三方NC/SA范围、实际用途及未来二进制通知仍需按发布内容核对。
-下一步：独立对话读取原REVIEW_REPORT、REMEDIATION_REPORT、INTERFACES和REVIEW_CHECKLIST，使用新build目录复审。
-复审前不把V01标DONE；最终提交ID用git log查询，工作树/既有分支历史均保留。
+仍不是完整SLAM或FAST-LIO，无LiDAR-IMU紧耦合；KITTI匹配RMSE不是车辆真实定位精度。
+重复位置5m错误、直线/对称网格歧义仍存在，accepted/converged不保证物理位姿正确。
+只有单道路帧对和有界实验；交互PCL Render、其他平台、完整内存检测、多帧轨迹/漂移未验收。
+
+## 下一步
+
+本轮最终main提交及干净状态由git log/status实际查询。全部既有提交和两轮审查记录保留。
+收到用户明确批准后，确认所属账户/组织，按RELEASE_READINESS创建空Public仓库并只推送main；
+在此之前不执行任何远程创建、remote add或push。远程展示与可见性验收届时再实际完成。

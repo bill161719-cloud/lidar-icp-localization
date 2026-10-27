@@ -7,8 +7,8 @@
 
 先读 README.md、docs/PROJECT_SPEC.md、ARCHITECTURE.md、INTERFACES.md、TASKS.md、PROGRESS.md、DECISIONS.md（后六项均位于 docs/）。
 执行 `git status --short --branch`、`git log -5 --oneline`。工作区有未知改动时保留，不覆盖、不清理。
-A/B/C 已集成，当前准备独立审查；没有用户授权不新增算法模块，不自行派生开发对话。
-首次独立报告已落盘，原文不得改成通过；当前为整改后待复审，主对话仅报告自检结果。
+A/B/C 已集成，第二轮独立复审在教学/工程展示范围通过，当前为发布前准备；没有用户授权不新增算法模块，不自行派生开发对话。
+两轮独立报告均保留原文；首轮历史结论不得改成通过。V01已依据REVIEW_REPORT_V2验收，实际公开发布仍待用户明确批准。
 本轮用户已明确授权原创MIT、Copyright (c) 2026 Wang Chenqi，第三方及KITTI范围见LICENSE/THIRD_PARTY。
 不要再次把同一署名/许可选择当待决问题，也不要将第三方内容归入MIT。
 

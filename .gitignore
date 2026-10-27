@@ -2,6 +2,10 @@
 /.local-tools/
 /.local-deps/
 /CMakeUserPresets.json
+CMakeCache.txt
+CMakeFiles/
+/Testing/
+/_deps/
 /.vs/
 /.vscode/
 *.user
@@ -10,6 +14,11 @@
 *.exe
 *.dll
 *.pdb
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
 *.log
 __pycache__/
 *.pyc

@@ -1,13 +1,14 @@
 # 模块 Worktree 启动约定
 
-本机主目录为 `D:/CodexProgects/lidar-icp-localization`，三个模块使用同级独立目录，不嵌套工作树。
+主目录以 `<workspace>/lidar-icp-localization` 表示，三个模块使用同级独立目录，不嵌套工作树。
+公开文档使用相对位置，当前机器上的真实映射用 `git worktree list` 查询；此处不要求固定磁盘或用户名。
 本文件由主对话维护；实际验证结果以 PROGRESS.md 为准。
 
 | 模块 | 目录 | 已有分支 | 负责范围 |
 |---|---|---|---|
-| A | D:/CodexProgects/lidar-icp-module-a | feature/cloud-processing | cloud_processor 头文件、实现和所属测试 |
-| B | D:/CodexProgects/lidar-icp-module-b | feature/icp-registration | pose_utils、icp_registration 头文件、实现和所属测试 |
-| C | D:/CodexProgects/lidar-icp-module-c | feature/experiments | generate_test_data、独立实验代码、results、EXPERIMENTS.md |
+| A | ../lidar-icp-module-a | feature/cloud-processing | cloud_processor 头文件、实现和所属测试 |
+| B | ../lidar-icp-module-b | feature/icp-registration | pose_utils、icp_registration 头文件、实现和所属测试 |
+| C | ../lidar-icp-module-c | feature/experiments | generate_test_data、独立实验代码、results、EXPERIMENTS.md |
 
 创建前主对话检查了 main 工作区干净、三个分支精确指向 015a535；接口和构建入口准备提交后统一快进。
 各分支保留 015a535 与 88279bf 历史，不重新建分支、不改写已有提交。

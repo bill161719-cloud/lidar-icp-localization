@@ -7,7 +7,7 @@
 
 先读 README.md、docs/PROJECT_SPEC.md、ARCHITECTURE.md、INTERFACES.md、TASKS.md、PROGRESS.md、DECISIONS.md（后六项均位于 docs/）。
 执行 `git status --short --branch`、`git log -5 --oneline`。工作区有未知改动时保留，不覆盖、不清理。
-当前阶段仅初始化；后续实现须由用户在对应对话启动。不自行派生开发对话或启动模块。
+初始化和依赖配置已完成；后续实现须由用户在对应对话启动。不自行派生开发对话或启动模块。
 
 ## 所有权
 
@@ -28,6 +28,8 @@
 公开类型遵循 include/cloud_types.h；签名以 docs/INTERFACES.md 为准。长度米，角度弧度，右手坐标。
 禁止混用 MSVC 与 GCC C++ 库、不同运行时或位数的预编译依赖。不得未经用户确认更换工具链。
 最小 bootstrap 的通过不代表 PCL/ICP 通过。模块验收需要 LIDAR_ENABLE_PCL=ON，注册相应 CTest。
+当前固定 PCL 1.15.1 和独立 Eigen 3.4.0；系统 pacman Eigen 5 不用于项目。先读 docs/ENVIRONMENT.md。
+用 tools/verify_dependencies.ps1 构建验证；独立 worktree 需传入共享 DependencyRoot/CMake 路径，避免重复安装或误选依赖。
 禁止用 assert 作为唯一测试判断（Release 可能禁用）；失败返回非零并输出原因。
 ICP 测试包含已知真值、初值、不收敛和非法输入；可视化测试与无显示单元测试分离。
 

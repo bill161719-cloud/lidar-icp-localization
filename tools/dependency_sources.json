@@ -1,0 +1,12 @@
+{
+  "pcl": {
+    "url": "https://github.com/PointCloudLibrary/pcl.git",
+    "tag": "pcl-1.15.1",
+    "commit": "3346843ea6b97697a1577293aa9cdf236b5c7ffb"
+  },
+  "eigen": {
+    "url": "https://gitlab.com/libeigen/eigen.git",
+    "tag": "3.4.0",
+    "commit": "3147391d946bb4b6c68edd901f2add6ac1f31f8c"
+  }
+}

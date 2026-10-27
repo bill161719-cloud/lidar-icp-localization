@@ -9,7 +9,7 @@
 | I02 | 主 | P0 | 目录/规范/接口/CMake | I01 | 文件落盘、无覆盖 | DONE |
 | I03 | 主 | P0 | C++17 bootstrap | I02 | 配置、编译、CLI CTest 全通过 | DONE |
 | I04 | 主 | P0 | 初始化 Git/基础提交 | I03 | main 提交且干净，模块分支基于同一提交 | DONE |
-| D01 | 主 | P0 | PCL/Eigen 依赖配置 | I01 | 同工具链，ON 构建/dependency_check 通过 | BLOCKED |
+| D01 | 主 | P0 | PCL/Eigen 依赖配置 | I01 | 同工具链，ON 构建/dependency_check 通过 | DONE |
 | A01 | A | P0 | PCD 读取与预处理 | I04,D01 | 合法/缺失/空/NaN/Inf/体素参数测试通过 | TODO |
 | B01 | B | P0 | Eigen 位姿工具 | I04,D01 | 合法 SE(3)、逆变换、已知误差/非法输入测试 | TODO |
 | B02 | B | P0 | PCL ICP 与指标 | B01,D01 | 已知真值/初值/失败场景/独立 RMSE | TODO |

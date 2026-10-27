@@ -5,9 +5,10 @@
 这是点云配准与相对位姿估计工程，不是完整 SLAM 或 FAST-LIO。
 
 **当前阶段：初始化骨架。只有 C++17 bootstrap CLI，尚未实现点云读取、ICP、可视化或真实道路实验。**
-数值精度、截图与算法性能尚无结果。PCL/Eigen 安装是后续编译模块的前置条件。
-本机已实际完成 Release 构建和 3/3 bootstrap 测试；PCL ON 配置因缺 Eigen3 失败。
-详细命令与结果见 [初始化验证](docs/INITIALIZATION.md)。
+数值精度、截图与算法性能尚无结果。PCL/Eigen 依赖已配置并验证，A/B/C 尚未启动。
+PCL ON 构建成功，已有和全新构建目录均 4/4 CTest 通过（含第三方依赖 smoke check）。
+初始化已完成 Release 构建和 3/3 bootstrap 测试；初始依赖缺失记录见 [初始化验证](docs/INITIALIZATION.md)，
+最新依赖状态、固定版本和命令见 [环境记录](docs/ENVIRONMENT.md)。
 
 ## 构建最小工程
 
@@ -28,19 +29,22 @@ ctest --test-dir build --output-on-failure
 Linux 等已有工具链可省略 `-G "MinGW Makefiles"`，运行 `./build/lidar_icp --help`；该平台本次未测试。
 默认不需要 PCL/Eigen，仅验证基础构建；bootstrap 测试不证明算法正确性。
 
-## 完整依赖检查（安装 PCL/Eigen 后）
+## 完整依赖检查
 
 所有库必须匹配编译器、位数、运行时；GCC 不可链接 MSVC 预编译 PCL。
-在本地设置包含同工具链安装前缀的 `LIDAR_DEPS_PREFIX` 后执行：
+本项目固定 PCL 1.15.1、Eigen 3.4.0，使用 UCRT64 GCC 和匹配的 pacman Boost/FLANN/VTK。
+系统 pacman Eigen 5.0.1 与当前 PCL 配置检查不兼容，不能让 CMake 自动选它。
+先按环境记录安装依赖包，再使用脚本构建和验证：
 
 ```powershell
-cmake -S . -B build-pcl -G "MinGW Makefiles" -DLIDAR_ENABLE_PCL=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$env:LIDAR_DEPS_PREFIX"
-cmake --build build-pcl --parallel 2
-ctest --test-dir build-pcl --output-on-failure
+./tools/build_dependencies.ps1
+./tools/verify_dependencies.ps1
 ```
 
-缺依赖应明确配置失败。当前 dependency_check 仅检查头文件、基础链接和实例化，
-不验证 GUI 窗口或完整算法。模块实现后主对话将接入库目标和功能测试。
+缺依赖或包版本不匹配应明确失败。脚本只修改当前进程 DLL 搜索路径，完成后恢复，不更改全局配置。
+dependency_check 直接调用第三方体素滤波、恒等 ICP 和 VTK 场景构建，不打开渲染窗口；
+它不验证 GUI 实际渲染、真实点云精度或模块实现。模块实现后主对话将接入库目标和功能测试。
+共享依赖时设置 LIDAR_DEPS_ROOT 或传 -DependencyRoot；CMake 不在 PATH 时可传 -CMake。
 
 ## 目录与文档
 

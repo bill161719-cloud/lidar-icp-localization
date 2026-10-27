@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
              << "  \"units\": \"metres and radians\",\n"
              << "  \"direction\": \"target=T_target_source*source\",\n"
              << "  \"generator\": \"mt19937, uint32/2^32\",\n"
-             << "  \"license\": \"project-generated synthetic data; project license pending\"\n}\n";
+             << "  \"license\": \"MIT; Copyright (c) 2026 Wang Chenqi; project-generated synthetic data\"\n}\n";
         std::cout << "Generated 2400 source/target points\n";
     } catch (const std::invalid_argument& e) {
         std::cerr << e.what() << '\n'; return 2;

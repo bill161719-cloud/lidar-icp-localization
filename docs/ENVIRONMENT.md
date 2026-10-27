@@ -151,3 +151,12 @@ JSON 与日志、具体数值及警告分析见 INTEGRATION_AB.md；不将人工
 CPython3.11.5 + NumPy2.4.4 + Matplotlib3.10.8 已有环境实际执行35组实验并重绘六图，未新装包或更换编译器。
 绘图可选版本锁在 tools/requirements-experiments.txt，普通CTest无需这些包或KITTI原始数据。
 main独立数据获取/转换、42输入哈希、35报告与六图复验记录见 EXPERIMENTS.md 和 results/metrics/main-review。
+
+## 独立审查整改环境
+
+本轮未升级或安装依赖。全新build-remediation：Release、PCL ON、GCC16.2.0、
+PCL1.15.1、Eigen3.4.0，完整CTest10/10，日志build/remediation-release.log及remediation-final-regression-v2.log。
+verify_dependencies.ps1新增LIDAR_REQUIRE_VALIDATED_VERSIONS=ON；直接CMake默认OFF并对未测组合发出警告。
+OFF仍检查原发现最低版本，但最低版本不构成已验证兼容范围；开启ON才严格拒绝不同版本组合。
+版本诊断分支用独立cmake -P脚本模拟版本元信息验证，未安装或声称测试过其他版本的实际库。
+使用已有CPython3.11.5/NumPy2.4.4/Matplotlib3.10.8重跑36组实验、46输入/16源码/六图核验。

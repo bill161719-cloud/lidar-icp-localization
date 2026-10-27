@@ -13,3 +13,5 @@ Vision meets Robotics: The KITTI Dataset，IJRR，2013。
 这不改变实验工具源码的许可证，也不代表 KITTI 作者对结果背书。
 
 完整命令、指标解释、图片、验证和局限见 docs/EXPERIMENTS.md。
+
+2026-10-27 许可确认补记（不改写历史图片/指标/元信息）：用户确认其有权授权的项目原创纯合成成果采用 MIT，Copyright (c) 2026 Wang Chenqi。此前 pending 表述为历史状态，现由根目录 LICENSE 与 docs/THIRD_PARTY.md 的范围说明更新；KITTI 道路及混合成果仍遵循上述 CC BY-NC-SA 3.0。

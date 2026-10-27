@@ -4,9 +4,9 @@
 使用 PCL 完成点云处理及 point-to-point ICP，使用 Eigen 表达和验证相对位姿。
 **这是点云配准与相对位姿估计实践，不是完整 SLAM 系统，也不是 FAST-LIO 复现。**
 
-当前 A/B/C 已在 main 集成并独立复验：全新 Release 构建、完整 **CTest 10/10**，
-**35 组实际实验**（原模块 10 组 + 主对话 25 组有界参数/退化实验），六张真实结果图可追溯。
-尚未完成独立质量审查和公开发布，源码最终 LICENSE/版权署名待确认。
+当前 A/B/C 已集成；针对首次独立审查完成工程整改自检：全新 Release 构建、完整 **CTest 10/10**，
+原35组加重复结构反例共 **36组实际实验**，六张真实结果图可追溯，等待独立复审。
+项目原创内容采用 [MIT](LICENSE)，Copyright (c) 2026 Wang Chenqi；第三方和道路成果另行授权，尚未公开发布。
 
 ## 功能与数据流
 
@@ -17,6 +17,7 @@ PCD / KITTI BIN → XYZI PCD → XYZ 有限点清理 → 体素下采样
 ```
 
 - PCD 读取、NaN/Inf 剔除、体素质心、点数和范围统计，不信任错误的 is_dense 标志。
+- ASCII PCD 严格验证数字词元，拒绝 foo/尾缀/残缺指数等损坏坐标；显式 NaN/Inf 保留给清理，输入失败不输出位姿。
 - source→target 变换、4×4 SE(3)、旋转/平移/四元数、fitness m²、内点 RMSE、内点率和 align 耗时。
 - 人工已知刚体变换验证、BIN→PCD 字节保持检查、KITTI 两个相邻帧与参数对比。
 - 未收敛和零/低内点率、高 RMSE 等结果拒绝输出有效位姿；保留诊断及失败退出码。
@@ -50,8 +51,10 @@ PCD / KITTI BIN → XYZI PCD → XYZ 有限点清理 → 体素下采样
 
 脚本显式开启 PCL、配置 Release、构建和运行完整 CTest；仅临时设置 DLL PATH，结束后恢复。
 已有本地依赖不重新下载或编译 PCL。依赖/CMake 不在默认位置时传 `-DependencyRoot`、`-CMake`、`-MsysRoot`。
-10 项 CTest 包含 5 组实验工具检查、5 组归档损坏检测和 9 个 CLI 场景；内部场景不重复计入 CTest 总数。
-日志见本机 `build/final-c-build.log`、`build/final-c-final-tests.log`。
+10 项 CTest 包含 5 组实验工具检查、10 组归档验证器检查和 11 个 CLI 场景；内部场景不重复计入 CTest 总数。
+最新全新构建与回归日志为本机 `build/remediation-release.log`、`build/remediation-final-regression-v2.log`。
+标准脚本启用 `LIDAR_REQUIRE_VALIDATED_VERSIONS=ON`，固定 PCL 1.15.1 / Eigen 3.4.0。
+直接 CMake 默认对未测版本组合给出警告；最低发现版本不代表已验证支持范围。
 
 默认 `LIDAR_ENABLE_PCL=OFF` 仅提供帮助/版本入口；正式功能必须使用上面的 ON 构建。
 若只检查最小 C++17 工程，可运行 CMake OFF 构建和 3 项基础测试，不能据此宣称 ICP 验收通过。
@@ -122,7 +125,8 @@ Velodyne 坐标 x 前、y 左、z 上，未隐式改轴、缩放或用相机/IMU
 | KITTI，0.6 m | 未测 | 未测 | 0.225686 | 90.16% | false，RMSE 超限 |
 
 原 10 组在 main 新二进制下复验，除路径与耗时外报告全部一致。
-35 组报告/命令/CSV、42 个输入哈希和六图来源见 [main 归档](results/metrics/main-review/REVIEW.md)。
+历史35组归档保持不变；整改后36组报告/命令/CSV、46个输入和16个源码哈希见
+[整改报告](docs/REMEDIATION_REPORT.md) 与 `results/metrics/remediation/`。
 **KITTI 内点 RMSE 不是车辆真实定位误差**；没有参考轨迹/外参真值，相关误差为 null，未宣称实车精度。
 耗时只计一次 align，非 FPS/延迟基准；当前只验证一个道路帧对。
 
@@ -146,6 +150,8 @@ main 独立复绘六图的哈希与提交图完全相同。
 - ICP 依赖初值、场景结构、动态物体和可匹配区域；未实现地图、回环、IMU、ROS 或多帧漂移分析。
 - 数值门禁只反映局部几何匹配。main 的直线/对称平面反例在内点率 1、极小 RMSE 时仍分别产生约 90°/180°姿态歧义；
   `accepted=true` 不是正确位姿或可观测性的保证。
+- 重复位置反例：target含两个相距5m的相同三维结构，错误副本初值使 RMSE≈7.87e-8m、内点率1，
+  仍得到5m真值平移误差。相对初值约束无法识别这个错误；下游还须有可信的场景/运动约束。
 - 粗体素可能 accepted 却达不到人工真值精度；人工 0.3 m 体素旋转误差约 0.26557°，未达到 0.1°标准。
 - 25 组单因素/退化扫描是有界证据，不是全随机种子、全部参数交互或全部真实道路条件的鲁棒性证明。
 - 尚未验证 PCL 交互窗口渲染。第三方 GCC/Eigen/PCL 分配器警告保留，未屏蔽或修改依赖，未做完整内存检测器验证。
@@ -168,8 +174,11 @@ build*/            本地构建/原始复现数据与日志（Git 忽略）
 
 KITTI 官方数据许可为 [CC BY-NC-SA 3.0](https://www.cvlibs.net/datasets/kitti/)。
 道路派生图/结果保留原作者署名、改动说明、许可链接及非商业/相同方式共享条件，
-见 [第三方说明](docs/THIRD_PARTY.md) 和图/指标目录 ATTRIBUTION.md，不能笼统套用候选 MIT。
-本项目尚无最终源码 LICENSE；需确认版权署名/许可证，并完成独立审查后再公开发布。
+见 [第三方说明](docs/THIRD_PARTY.md) 和图/指标目录 ATTRIBUTION.md，不能笼统套用项目 MIT。
+根目录 LICENSE 仅适用于用户有权授权的原创代码、文档和纯合成成果。
+PCL修补脚本中上游匹配上下文保留BSD通知；PCL/Eigen/KITTI等不被改为MIT，详见第三方说明。
+历史元信息中的许可 pending 保留原样，目录署名文件已补记当前授权。
+首次独立报告结论保持不变，完成整改复审后再决定公开发布。
 用户明确批准之前不创建公开远程仓库、不推送。批准后按以下流程上传已经审核的提交：
 
 ```powershell

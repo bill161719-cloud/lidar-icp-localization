@@ -1,0 +1,43 @@
+{
+  "baseline": "4bc4e13",
+  "malformed_pcd": {
+    "before_exit": 0,
+    "before_accepted": true,
+    "after_exit": 3,
+    "after_stdout_empty": true,
+    "command": [
+      "build-remediation/lidar_icp.exe",
+      "--source",
+      "build-independent-review/adversarial/bad_token.pcd",
+      "--target",
+      "build-independent-review/adversarial/zero_token.pcd",
+      "--voxel-size",
+      ".1"
+    ]
+  },
+  "validator_combined_mutation": {
+    "before": {
+      "reports_checked": 35,
+      "figures_checked": 6,
+      "input_hashes_checked": 0,
+      "reference_cases_matched": [
+        "synthetic_v0.02",
+        "synthetic_v0.1",
+        "synthetic_v0.3",
+        "synthetic_noise_outliers",
+        "synthetic_bad_initial",
+        "synthetic_partial",
+        "kitti_v0.1",
+        "kitti_v0.3",
+        "kitti_v0.6",
+        "kitti_strict_gate"
+      ],
+      "alignment_checks": {},
+      "result": "passed"
+    },
+    "after": {
+      "result": "rejected",
+      "reason": "T_target_source: SE(3) 末行非法"
+    }
+  }
+}

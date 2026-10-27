@@ -5,15 +5,79 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/io/pcd_io.h>
 #include <algorithm>
+#include <charconv>
+#include <cctype>
 #include <cmath>
 #include <cstdint>
+#include <fstream>
 #include <iostream>
 #include <limits>
+#include <regex>
 #include <sstream>
 #include <stdexcept>
 
 namespace lidar {
 namespace {
+// PCL's ASCII reader can silently turn malformed tokens into zero. Validate
+// before passing the body to PCL; binary encodings keep PCL's decoding path.
+void validateAscii(const std::string& path, const pcl::PCLPointCloud2& header,
+                   unsigned int offset) {
+    std::ifstream input(path, std::ios::binary);
+    input.seekg(offset);
+    const auto fail = [&] { throw std::runtime_error("PCD ASCII 数字或行格式非法: " + path); };
+    static const std::regex decimal(R"([+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)");
+    std::size_t points = 0;
+    const auto expected = static_cast<std::size_t>(header.width) * header.height;
+    std::string line;
+    while (std::getline(input, line)) {
+        std::istringstream row(line);
+        row >> std::ws;
+        if (row.eof() || row.peek() == '#') continue;
+        if (++points > expected) fail();
+        for (const auto& field : header.fields) {
+            for (std::uint32_t component = 0; component < field.count; ++component) {
+                std::string token;
+                if (!(row >> token)) fail();
+                std::string lower = token;
+                std::transform(lower.begin(), lower.end(), lower.begin(),
+                               [](unsigned char ch) { return static_cast<char>(std::tolower(ch)); });
+                const auto first = lower.find_first_not_of("+-");
+                const bool special = first != std::string::npos && first <= 1 &&
+                    (lower.substr(first) == "nan" || lower.substr(first) == "inf" ||
+                     lower.substr(first) == "infinity");
+                const bool floating = field.datatype == pcl::PCLPointField::FLOAT32 ||
+                                      field.datatype == pcl::PCLPointField::FLOAT64;
+                if (special) {
+                    if (!floating) fail();
+                    continue; // Explicit NaN/Inf are intentionally cleaned later.
+                }
+                if (!std::regex_match(token, decimal)) fail();
+                const char* begin = token.data() + (token.front() == '+' ? 1 : 0);
+                double value = 0;
+                const auto parsed = std::from_chars(begin, token.data() + token.size(), value);
+                if (parsed.ec != std::errc{} || parsed.ptr != token.data() + token.size() ||
+                    !std::isfinite(value)) fail();
+                if (field.datatype == pcl::PCLPointField::FLOAT32 &&
+                    (std::abs(value) > std::numeric_limits<float>::max() ||
+                     (value != 0 && static_cast<float>(value) == 0))) fail();
+                if (!floating) {
+                    // Integer auxiliary fields must not be parsed as decimal floats.
+                    const bool isSigned = field.datatype == pcl::PCLPointField::INT8 ||
+                        field.datatype == pcl::PCLPointField::INT16 || field.datatype == pcl::PCLPointField::INT32;
+                    const int bits = 8 * pcl::getFieldSize(field.datatype);
+                    if (bits <= 0 || bits > 32 || std::floor(value) != value ||
+                        token.find_first_of(".eE") != std::string::npos ||
+                        value < (isSigned ? -std::ldexp(1.0, bits-1) : 0.0) ||
+                        value >= std::ldexp(1.0, isSigned ? bits-1 : bits)) fail();
+                }
+            }
+        }
+        row >> std::ws;
+        if (!row.eof()) fail();
+    }
+    if (input.bad() || points != expected) fail();
+}
+
 bool finite(const Point& point) {
     return std::isfinite(point.x) && std::isfinite(point.y) && std::isfinite(point.z);
 }
@@ -69,23 +133,33 @@ void requireRepresentableGrid(const Cloud& cloud, float size) {
 CloudPtr loadPcd(const std::string& path) {
     pcl::PCLPointCloud2 encoded;
     auto output = pcl::make_shared<Cloud>();
-    if (pcl::io::loadPCDFile(path, encoded, output->sensor_origin_,
-                             output->sensor_orientation_) < 0) {
+    int version = 0, dataType = 0;
+    unsigned int offset = 0;
+    pcl::PCDReader reader;
+    if (reader.readHeader(path, encoded, output->sensor_origin_,
+                          output->sensor_orientation_, version, dataType, offset) < 0) {
         throw std::runtime_error("PCD 读取失败: " + path);
     }
     for (const auto* name : {"x", "y", "z"}) {
         bool found = false;
         for (const auto& field : encoded.fields) {
-            if (field.name == name && field.count == 1) {
+            if (field.name == name && field.count == 1 &&
+                (field.datatype == pcl::PCLPointField::FLOAT32 ||
+                 field.datatype == pcl::PCLPointField::FLOAT64)) {
                 found = true;
             }
         }
         if (!found) {
-            throw std::runtime_error("PCD 缺少单值 XYZ 字段: " + path);
+            throw std::runtime_error("PCD 缺少单值浮点 XYZ 字段: " + path);
         }
     }
     if (encoded.width == 0 || encoded.height == 0) {
         throw std::invalid_argument("PCD 点云为空: " + path);
+    }
+    if (dataType == 0) validateAscii(path, encoded, offset);
+    if (pcl::io::loadPCDFile(path, encoded, output->sensor_origin_,
+                            output->sensor_orientation_) < 0) {
+        throw std::runtime_error("PCD 读取失败: " + path);
     }
     pcl::fromPCLPointCloud2(encoded, *output);
     for (const auto& point : *output) {

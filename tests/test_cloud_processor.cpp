@@ -132,6 +132,29 @@ void testPcdErrors(Fixtures& fixtures) {
     expectThrow<std::invalid_argument>([&] { loadPcd(fixtures.path("zero.pcd")); });
 }
 
+void testStrictAscii(Fixtures& fixtures) {
+    for (const auto* token : {"foo", "1foo", "1.2m", "1e", "--1", "0x1p2", "1,2",
+                              "1e999", "1e-999", "3.5e38", "nan(payload)"}) {
+        fixtures.write("bad-token.pcd", header(2) + "0 0 0\n1 " + token + " 2\n");
+        expectThrow<std::runtime_error>([&] { loadPcd(fixtures.path("bad-token.pcd")); });
+    }
+    fixtures.write("numbers.pcd", header(2) + "+1.25 -.5 2.e+1\n1e-3 0 -0\n");
+    const auto numbers = loadPcd(fixtures.path("numbers.pcd"));
+    check(coordinatesNear((*numbers)[0].x, 1.25F) && coordinatesNear((*numbers)[0].y, -.5F) &&
+          coordinatesNear((*numbers)[0].z, 20.F) && coordinatesNear((*numbers)[1].x, .001F),
+          "合法十进制/科学计数法未保留");
+    for (const auto* token : {"nan", "NaN", "-nan", "inf", "+inf", "-inf", "INF", "infinity"}) {
+        fixtures.write("nonfinite-token.pcd", header(2) + "0 0 0\n1 " + token + " 2\n");
+        const auto mixed = loadPcd(fixtures.path("nonfinite-token.pcd"));
+        check(!std::isfinite((*mixed)[1].y) && removeNonFinite(mixed)->size() == 1,
+              "显式非有限值被静默变零或未清理");
+    }
+    for (const auto* body : {"0 0 0\n1 2\n", "0 0 0\n1 2 3 extra\n", "0 0 0\n", "0 0 0\n1 2 3\n4 5 6\n"}) {
+        fixtures.write("bad-row.pcd", header(2) + body);
+        expectThrow<std::runtime_error>([&] { loadPcd(fixtures.path("bad-row.pcd")); });
+    }
+}
+
 void testCleaning() {
     const float nan = std::numeric_limits<float>::quiet_NaN();
     const float inf = std::numeric_limits<float>::infinity();
@@ -248,6 +271,7 @@ int main() {
         const std::vector<std::pair<std::string, std::function<void()>>> tests = {
             {"PCD 三种编码及非有限点保留", [&] { testPcd(fixtures); }},
             {"PCD 读取错误和空数据", [&] { testPcdErrors(fixtures); }},
+            {"ASCII 严格词元/行数与显式非有限数", [&] { testStrictAscii(fixtures); }},
             {"XYZ 有限性及输入不变", testCleaning},
             {"体素质心、负坐标和单点", testVoxel},
             {"非法输入、体素参数和网格越界", testInvalidInputs},

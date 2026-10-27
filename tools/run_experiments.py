@@ -8,6 +8,7 @@ import json
 import math
 from pathlib import Path
 import platform
+import random
 import subprocess
 
 import matplotlib
@@ -43,11 +44,11 @@ def read_pcd(path):
 
 
 
-def write_pcd(path, points):
+def write_pcd(path, points, fmt='%.10g'):
     with path.open('x', encoding='ascii') as f:
         f.write('VERSION 0.7\nFIELDS x y z\nSIZE 4 4 4\nTYPE F F F\nCOUNT 1 1 1\n'
                 f'WIDTH {len(points)}\nHEIGHT 1\nPOINTS {len(points)}\nDATA ascii\n')
-        np.savetxt(f, points, fmt='%.10g')
+        np.savetxt(f, points, fmt=fmt)
 
 
 def moved(points, matrix):
@@ -253,20 +254,39 @@ def main(args):
             np.savetxt(init, truth @ ambiguity)
             run(f'sweep_degenerate_{name}', src, dst, .005,
                 truth=synthetic/'truth.txt', initial=init, rmse=.1, evaluation=.2)
+    if args.repeated_structure:
+        # Reproduce the review's field-of-view ambiguity, not a new ICP method.
+        rng = random.Random(7)
+        points = np.array([[rng.random() for _ in range(3)] for _ in range(150)])
+        src, dst = data/'repeated_source.pcd', data/'repeated_target.pcd'
+        initial, truth = data/'repeated_initial.txt', data/'repeated_truth.txt'
+        write_pcd(src, points, fmt='%.9g')
+        write_pcd(dst, np.vstack([points, points+[5,0,0]]), fmt='%.9g')
+        guess = np.eye(4); guess[0,3] = 5
+        np.savetxt(initial, guess); np.savetxt(truth, np.eye(4))
+        repeated = run('repeated_structure', src, dst, .005, initial=initial, truth=truth, evaluation=1.)
+        if not (repeated['accepted'] and repeated['inlier_ratio'] > .99 and
+                repeated['rmse_m'] < 1e-5 and abs(repeated['translation_error_m']-5) < .001):
+            raise RuntimeError('重复结构反例行为变化，必须重新审查其含义')
     with (output/'summary.csv').open('x', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=list(records[0])); writer.writeheader(); writer.writerows(records)
     inputs = [synthetic/p for p in ['source.pcd', 'target.pcd', 'truth.txt', 'metadata.json']]
     inputs += [data/p for p in ['noisy_target.pcd', 'outlier_source.pcd', 'partial_target.pcd', 'bad_initial.txt']]
     inputs += [pair/p for p in ['0000000000.bin', '0000000001.bin', '0000000000.pcd', '0000000001.pcd', 'timestamps.txt']]
     inputs = sorted(set(inputs) | used_inputs)
-    source_files = [Path('CMakeLists.txt'), Path('tools/generate_test_data.cpp'), Path('tools/run_experiments.py')]
+    source_files = [Path(p) for p in ('CMakeLists.txt', 'tools/generate_test_data.cpp', 'tools/run_experiments.py',
+                                     'tools/validate_experiments.py', 'tools/verify_dependencies.ps1',
+                                     'tools/prepare_pcl_source.py')]
     source_files += sorted(Path('src').glob('*.cpp')) + sorted(Path('include').glob('*.h'))
     save_json(output/'provenance.json', {
         'date': datetime.now().astimezone().isoformat(),
         'base_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
         'working_tree_dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], text=True).strip()),
         'binary_sha256': {'lidar_icp': sha(args.exe), 'generate_test_data': sha(args.generator)},
-        'source_sha256': {p.as_posix(): sha(p) for p in source_files},
+        'source_hash_policy': 'utf8-lf',
+        'source_sha256': {p.as_posix(): hashlib.sha256(p.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+                          for p in source_files},
+        'source_byte_sha256': {p.as_posix(): sha(p) for p in source_files},
         'python': platform.python_version(), 'numpy': np.__version__, 'matplotlib': matplotlib.__version__,
         'input_sha256': {p.as_posix(): sha(p) for p in inputs},
         'figure_sha256': {p.name: sha(p) for p in sorted(figures.glob('*.png'))},
@@ -287,4 +307,5 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, default=Path('results/metrics/module-c-v1'))
     parser.add_argument('--figures', type=Path, default=Path('results/figures/module-c-v1'))
     parser.add_argument('--sweep', action='store_true', help='附加25个固定参数/空间裁剪/退化反例实验；非完整鲁棒性保证')
+    parser.add_argument('--repeated-structure', action='store_true', help='附加审查发现的5m重复位置歧义反例，预期仍accepted')
     main(parser.parse_args())

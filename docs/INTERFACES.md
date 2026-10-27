@@ -34,6 +34,10 @@ PreprocessResult preprocess(const CloudConstPtr& input,
 ```
 
 voxel_size_m 必须有限且 >0。loadPcd 保留非有限点供清理；至少有一个有限 XYZ。
+读取边界澄清：XYZ为单值FLOAT32/FLOAT64；ASCII一行一个点、按COUNT展开，严格消费所有数字词元。
+支持十进制/科学计数法、显式大小写NaN/Inf/Infinity及符号；非法词元、尾缀、越界或错误列/点数抛runtime_error。
+NaN/Inf是显式非有限数值而非非法词元，不会因为严格词法校验被取消原有清理行为。
+错误输入不进入ICP、不输出配准JSON；CLI按读取错误返回3。binary/binary_compressed仍由PCL解码。
 removeNonFinite 显式检查每个 XYZ，即使 is_dense=true。voxelDownsample 输入必须全部有限；否则抛异常；
 preprocess 串联清理和下采样。原始点数包括非法点，finite_points 为清理后数量。
 

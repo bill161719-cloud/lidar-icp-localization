@@ -27,3 +27,6 @@ Eigen 优先作为导入目标 Eigen3::Eigen。所有 C++ 库必须同位数、�
 C 现已接入 generate_test_data、Range 获取、KITTI BIN→PCD、实验驱动与一致性验证。
 标准 CTest 共10项、离线且只用Python标准库；外部KITTI/绘图库和35组完整实验通过显式命令执行。
 原 module-c-v2 证据不覆盖，main 独立复验存 main-review，并记录实际源码/二进制/输入和图像哈希。
+
+独立审查整改新增ASCII词元边界校验与归档语义/显式源码快照核验，不改变模块函数签名或ICP算法。
+最新36组实验（含5m重复位置反例）放results/metrics/remediation；普通CTest仍10项、离线，详见REMEDIATION_REPORT。

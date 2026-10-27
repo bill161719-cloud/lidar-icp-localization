@@ -262,3 +262,48 @@ final-c-convert-0.log、final-c-convert-1.log、final-c-experiments-v2.log、fin
 
 当前可以启动独立质量审查。仍需完成源码许可证/署名确认与最终发布审查；
 PCL/VTK 场景构造检查已通过，但 PNG 是 Matplotlib 数据图，不冒称交互 PCL GUI 截图。
+
+## 独立审查整改复验
+
+以上是4bc4e13时历史记录；当前MIT/署名已由用户明确授权，见LICENSE/THIRD_PARTY。
+原独立报告不修改；严格PCD边界与归档验证器整改见 REMEDIATION_REPORT。
+新build-remediation全新Release成功，最终CTest10/10，A7/7、工具5/5、验证器10/10、CLI11/11。
+
+本次实际执行原35案例及新增重复位置反例，共36组。46个输入哈希、16个当前源码哈希、
+6图及35参考案例全部核验通过；35报告只允许source/target路径与耗时不同，六图字节相同。
+原两个指标归档和PNG不回写，新增结果位于results/metrics/remediation/。
+干净人工和KITTI0.3/0.6数值仍与前文一致；KITTI内点RMSE仍不是车辆定位真值误差。
+
+重复位置实验使用Python Random(7)生成150个单位立方体点，target再叠加其x+5m副本；
+指定真值单位阵、初值x+5m、0.005m体素，结果accepted=true、内点率1、
+RMSE=7.872274178e-8m、平移真值误差5m，旋转误差2.580956751e-8rad。
+这是部分视野/重复位置歧义，不是一般随机3D结构本身不可观测。
+相对初值修正约束在本例接近零；没有可信运动先验时不设置任意绝对位移阈值，
+双向覆盖率也无法普遍区分正常部分视野。当前明确保留算法局限及持续回归。
+
+复验命令（本机已运行；其他复审使用新的三个输出目录，不覆盖旧结果）：
+
+```powershell
+./tools/verify_dependencies.ps1 -BuildDirectory build-remediation -Jobs 1
+$pythonExe = (Get-Command python.exe).Source
+$savedPath = $env:Path
+try {
+  $ucrtBin = Split-Path -Parent (Get-Command g++.exe).Source
+  $env:Path = "$((Resolve-Path .local-deps/pcl-1.15.1/bin).Path);$ucrtBin;$savedPath"
+  & $pythonExe tools/run_experiments.py --exe build-remediation/lidar_icp.exe --generator build-remediation/generate_test_data.exe --work build-remediation/experiment-data-v2 --kitti data/kitti/drive_0005_pair --output build-remediation/metrics-v2 --figures build-remediation/figures-v2 --sweep --repeated-structure
+} finally {
+  $env:Path = $savedPath
+}
+& $pythonExe tools/validate_experiments.py --metrics build-remediation/metrics-v2 --figures build-remediation/figures-v2 --reference results/metrics/main-review --check-alignment --source-root .
+```
+
+`--sweep`仍为旧25组，新增反例须显式加`--repeated-structure`，不悄悄改旧实验数量。
+完整校验读取初值/truth并核对误差，显式source-root才核查运行源码；
+省略该参数会明确报告source_verification=not_requested，历史归档不能盲目与当前版本比较。
+`--skip-inputs`只验证报告/图与命令结构、输入哈希成员，不宣称未提供的原始输入或矩阵文件已经检查。
+这些是结构/哈希一致性检查，不是归档的加密签名或防伪证明。
+新源码哈希显式标记utf8-lf策略，并保留原始字节哈希；LF/CRLF变化通过，实际代码变更仍拒绝。
+历史未标记策略的归档继续按原始字节检查，只在明确提供对应源码快照时执行。
+
+许可变更仅更新当前说明与未来生成器metadata；历史metadata的pending保持原运行原件。
+MIT只用于原创内容及纯合成成果；KITTI道路/混合成果继续按目录ATTRIBUTION范围处理。

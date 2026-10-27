@@ -1,4 +1,6 @@
 """Apply the documented VTK dependency-discovery fix to PCL 1.15.1 only."""
+# Project-authored patch logic: MIT. Embedded upstream matching/context lines:
+# PCL BSD-3-Clause; original notice retained in licenses/PCL-BSD-3-Clause.txt.
 
 import argparse
 from pathlib import Path

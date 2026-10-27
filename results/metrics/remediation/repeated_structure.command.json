@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "build-remediation\\lidar_icp.exe",
+    "--source",
+    "build-remediation\\experiment-data-v2\\repeated_source.pcd",
+    "--target",
+    "build-remediation\\experiment-data-v2\\repeated_target.pcd",
+    "--output",
+    "build-remediation\\metrics-v2\\repeated_structure.json",
+    "--voxel-size",
+    "0.005",
+    "--max-iterations",
+    "100",
+    "--max-correspondence-distance",
+    "1.0",
+    "--evaluation-distance",
+    "1.0",
+    "--max-rmse",
+    "0.2",
+    "--truth",
+    "build-remediation\\experiment-data-v2\\repeated_truth.txt",
+    "--initial",
+    "build-remediation\\experiment-data-v2\\repeated_initial.txt"
+  ],
+  "exit_code": 0
+}

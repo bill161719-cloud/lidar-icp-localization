@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "build-remediation\\lidar_icp.exe",
+    "--source",
+    "build-remediation\\experiment-data-v2\\sweep_outliers_0.1.pcd",
+    "--target",
+    "build-remediation\\experiment-data-v2\\synthetic\\target.pcd",
+    "--output",
+    "build-remediation\\metrics-v2\\sweep_outliers_0.1.json",
+    "--voxel-size",
+    "0.1",
+    "--max-iterations",
+    "100",
+    "--max-correspondence-distance",
+    "1.0",
+    "--evaluation-distance",
+    "0.2",
+    "--max-rmse",
+    "0.1",
+    "--truth",
+    "build-remediation\\experiment-data-v2\\synthetic\\truth.txt"
+  ],
+  "exit_code": 0
+}

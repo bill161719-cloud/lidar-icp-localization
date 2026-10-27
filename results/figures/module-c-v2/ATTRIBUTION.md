@@ -13,3 +13,5 @@
 
 synthetic_raw.png、synthetic_alignment.png、synthetic_errors.png 来自项目自生成数据，不使用 KITTI 点云；随项目最终许可决定，不在此替用户选择源码或自有成果许可证。
 生成命令与局限见 docs/EXPERIMENTS.md；输入/图像哈希见 results/metrics/module-c-v2/provenance.json。
+
+2026-10-27 许可确认补记（不改写历史图片/指标/元信息）：用户确认其有权授权的项目原创纯合成成果采用 MIT，Copyright (c) 2026 Wang Chenqi。此前 pending 表述为历史状态，现由根目录 LICENSE 与 docs/THIRD_PARTY.md 的范围说明更新；KITTI 道路及混合成果仍遵循上述 CC BY-NC-SA 3.0。

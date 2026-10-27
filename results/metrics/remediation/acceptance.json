@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-27",
+  "base_commit": "4bc4e1346288b150e367c04576cae8f6c86c1ce7",
+  "review_report_sha256": "3e18e926978b461dcaa10fd864d81044e601d23da2c43dc00037df748822f0b0",
+  "build": "fresh Release, PCL enabled, validated versions required",
+  "ctest": {
+    "passed": 10,
+    "total": 10,
+    "log": "build/remediation-final-regression-v2.log",
+    "elapsed_seconds": 3.95
+  },
+  "internal_groups": {
+    "cloud_processor": 7,
+    "experiment_tools": 5,
+    "archive_validator": 10,
+    "cli_pipeline": 11
+  },
+  "experiments": 36,
+  "input_hashes": 46,
+  "source_hashes": 16,
+  "figures": 6,
+  "source_original_license": "MIT; Copyright (c) 2026 Wang Chenqi",
+  "independent_re_review": "pending",
+  "source_hash_policy": "utf8-lf",
+  "indexed_source_snapshot_verified": true,
+  "publication_scan": {
+    "files_checked": 323,
+    "raw_or_build_artifacts": 0,
+    "files_over_10MiB": 0,
+    "personal_path_pattern_matches": 0,
+    "credential_pattern_matches": 0,
+    "broken_markdown_links": 0
+  }
+}

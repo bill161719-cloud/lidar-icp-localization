@@ -37,7 +37,7 @@ try {
     Invoke-Checked 'python' @((Join-Path $PSScriptRoot 'verify_msys2_packages.py'), $MsysRoot)
     Invoke-Checked $CMake @('-S', $projectRoot, '-B', $BuildDirectory, '-G', 'MinGW Makefiles',
         "-DCMAKE_C_COMPILER=$ucrtPrefix/bin/cc.exe", "-DCMAKE_CXX_COMPILER=$ucrtPrefix/bin/c++.exe",
-        '-DCMAKE_BUILD_TYPE=Release', '-DBUILD_TESTING=ON', '-DLIDAR_ENABLE_PCL=ON',
+        '-DCMAKE_BUILD_TYPE=Release', '-DBUILD_TESTING=ON', '-DLIDAR_ENABLE_PCL=ON', '-DLIDAR_REQUIRE_VALIDATED_VERSIONS=ON',
         "-DEigen3_DIR=$DependencyRoot/eigen-3.4.0/share/eigen3/cmake",
         "-DCMAKE_PREFIX_PATH=$pclPrefix;$ucrtPrefix")
     Invoke-Checked $CMake @('--build', $BuildDirectory, '--parallel', "$Jobs")

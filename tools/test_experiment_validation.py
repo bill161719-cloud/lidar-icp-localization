@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 
-from validate_experiments import load_json, validate, validate_reports
+from validate_experiments import load_json, validate, validate_reports, validate_source_hashes, validate_truth_file
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--archive', type=Path, required=True)
@@ -55,8 +55,6 @@ class ValidationTests(unittest.TestCase):
     def test_reference_compares_transformation_not_timing(self):
         path = self.metrics/'synthetic_v0.02.json'
         report = load_json(path)
-        report['source'] = 'different-root/source.pcd'
-        report['target'] = 'different-root/target.pcd'
         report['elapsed_ms'] += 42
         csv_path = self.metrics/'summary.csv'
         with csv_path.open(encoding='utf-8', newline='') as stream:
@@ -72,7 +70,7 @@ class ValidationTests(unittest.TestCase):
                                       check_inputs=False)['reference_cases_matched']), 10)
         report['T_target_source'][0][3] += 1
         save(path, report)
-        with self.assertRaisesRegex(ValueError, '复验不一致'):
+        with self.assertRaisesRegex(ValueError, '不一致'):
             validate(self.metrics, args.figures, args.archive, check_inputs=False)
 
     def test_figure_corruption_detected(self):
@@ -82,6 +80,94 @@ class ValidationTests(unittest.TestCase):
             stream.write(b'corruption')
         with self.assertRaisesRegex(ValueError, '图像哈希错误'):
             validate(self.metrics, figures, check_inputs=False)
+
+    def test_matrix_and_pose_corruptions_without_reference(self):
+        path = self.metrics/'synthetic_v0.02.json'
+        original = load_json(path)
+        mutations = [
+            ('T_target_source', [[0]*4 for _ in range(4)]),
+            ('T_target_source', [[1, 0], [0, 1]]),
+            ('T_target_source', [[float('nan')]*4 for _ in range(4)]),
+            ('diagnostic_T_target_source', [[1,0,0,9],[0,1,0,0],[0,0,1,0],[0,0,0,1]]),
+            ('initial_T_target_source', [[0]*4 for _ in range(4)])]
+        for key, value in mutations:
+            with self.subTest(key=key, value=value):
+                report = json.loads(json.dumps(original)); report[key] = value; save(path, report)
+                with self.assertRaises(ValueError): validate_reports(self.metrics)
+        for key, value in [('translation_m', [9,9,9]), ('quaternion_wxyz', [1,0,0,0]),
+                           ('rotation', [[0]*3 for _ in range(3)])]:
+            with self.subTest(key=key):
+                report = json.loads(json.dumps(original)); report['pose'][key] = value; save(path, report)
+                with self.assertRaises(ValueError): validate_reports(self.metrics)
+
+    def test_command_semantic_corruptions_without_reference(self):
+        path = self.metrics/'synthetic_v0.02.command.json'
+        original = load_json(path)
+        for key, value in [('--source', 'fake.pcd'), ('--target', 'fake.pcd'),
+                           ('--max-rmse', '999'), ('--truth', 'fake_truth')]:
+            command = json.loads(json.dumps(original))
+            command['argv'][command['argv'].index(key)+1] = value
+            save(path, command)
+            with self.subTest(key=key), self.assertRaises(ValueError): validate_reports(self.metrics)
+        for argv in [['fake_executable', '--truth', 'fake_truth', '--max-rmse', '999'],
+                     original['argv']+['--max-rmse', '1'], original['argv']+['--unknown','1'],
+                     original['argv']+['--initial','fake_initial'], original['argv'][:-1]]:
+            command = dict(original); command['argv'] = argv; save(path, command)
+            with self.subTest(argv=argv), self.assertRaises(ValueError): validate_reports(self.metrics)
+
+    def test_explicit_source_snapshot_hashes(self):
+        import hashlib
+        source = self.root/'source'; source.mkdir()
+        code = source/'original.cpp'; code.write_text('original code', encoding='utf-8')
+        provenance = {'source_sha256': {'original.cpp': hashlib.sha256(code.read_bytes()).hexdigest()}}
+        self.assertEqual(validate_source_hashes(provenance, source), 1)
+        code.write_text('changed code', encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, '源码哈希错误'): validate_source_hashes(provenance, source)
+        with self.assertRaises(ValueError): validate_source_hashes({}, source)
+        code.write_bytes(b'line1\r\nline2\r\n')
+        canonical = {'source_hash_policy':'utf8-lf', 'source_sha256':{
+            'original.cpp':hashlib.sha256(b'line1\nline2\n').hexdigest()}}
+        self.assertEqual(validate_source_hashes(canonical, source), 1)
+        code.write_bytes(b'line1\nline2\n')
+        self.assertEqual(validate_source_hashes(canonical, source), 1)
+        code.write_bytes(b'changed\nline2\n')
+        with self.assertRaises(ValueError): validate_source_hashes(canonical, source)
+
+    def test_wrong_initial_file_and_valid_quaternion_sign(self):
+        path = self.metrics/'synthetic_v0.02.json'
+        report = load_json(path)
+        report['pose']['quaternion_wxyz'] = [-x for x in report['pose']['quaternion_wxyz']]
+        save(path, report)
+        self.assertEqual(len(validate_reports(self.metrics)), 10)
+        command_path = self.metrics/'synthetic_bad_initial.command.json'
+        command = load_json(command_path)
+        initial = self.root/'wrong-initial.txt'
+        initial.write_text('1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1', encoding='ascii')
+        old = command['argv'][command['argv'].index('--initial')+1]
+        command['argv'][command['argv'].index('--initial')+1] = str(initial); save(command_path, command)
+        provenance = load_json(self.metrics/'provenance.json')
+        provenance['input_sha256'][str(initial)] = provenance['input_sha256'].pop(old.replace('\\','/'))
+        save(self.metrics/'provenance.json', provenance)
+        csv_path = self.metrics/'summary.csv'
+        with csv_path.open(encoding='utf-8', newline='') as f: rows = list(csv.DictReader(f))
+        for row in rows:
+            if row['experiment'] == 'synthetic_bad_initial': row['initial'] = str(initial)
+        # Put this case first: the test supplies only its local matrix fixture,
+        # and must never depend on historical truth files outside the archive.
+        rows.sort(key=lambda row: row['experiment'] != 'synthetic_bad_initial')
+        with csv_path.open('w', encoding='utf-8', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)
+        with self.assertRaisesRegex(ValueError, '初值文件/报告'):
+            validate_reports(self.metrics, check_inputs=True)
+
+    def test_truth_file_semantics(self):
+        truth = self.root/'truth.txt'
+        truth.write_text('1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1', encoding='ascii')
+        identity = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
+        report = {'T_target_source':identity, 'translation_error_m':0., 'rotation_error_rad':0.}
+        validate_truth_file(report, truth)
+        report['translation_error_m'] = 5.
+        with self.assertRaisesRegex(ValueError, 'truth 文件'): validate_truth_file(report, truth)
 
 
 unittest.main(argv=[sys.argv[0], *rest])

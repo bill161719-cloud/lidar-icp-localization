@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "build-remediation\\lidar_icp.exe",
+    "--source",
+    "data\\kitti\\drive_0005_pair\\0000000001.pcd",
+    "--target",
+    "data\\kitti\\drive_0005_pair\\0000000000.pcd",
+    "--output",
+    "build-remediation\\metrics-v2\\kitti_v0.1.json",
+    "--voxel-size",
+    "0.1",
+    "--max-iterations",
+    "100",
+    "--max-correspondence-distance",
+    "1.0",
+    "--evaluation-distance",
+    "0.5",
+    "--max-rmse",
+    "0.2"
+  ],
+  "exit_code": 0
+}

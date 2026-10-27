@@ -228,6 +228,38 @@ class PipelineCliTests(unittest.TestCase):
         self.assertIsNone(report["rotation_error_rad"])
         self.assertTrue(report["accepted"])
 
+    def test_malformed_coordinate_never_reaches_icp(self):
+        points = [(0, 0, 0), (1, 0, 0), (0, 2, 0), (0, 0, 3), (2, 0, 4), (4, 1, 2)]
+        good, bad = self.root/'zero-token.pcd', self.root/'bad-token.pcd'
+        write_pcd(good, points)
+        for token in ('foo', '1foo', '1e999'):
+            bad.write_text(good.read_text(encoding='ascii').replace('2 0 4', f'2 {token} 4'), encoding='ascii')
+            for source, target in ((bad, good), (good, bad)):
+                with self.subTest(token=token, source=str(source)):
+                    output = self.root/f'invalid-{token}-{source.stem}.json'
+                    self.assertIsNone(self.invoke(['--source', source, '--target', target,
+                                                  '--voxel-size', '.1', '--output', output], 3))
+                    self.assertFalse(output.exists())
+        self.assertTrue(self.invoke(['--source', good, '--target', good, '--voxel-size', '.1'], 0)['accepted'])
+
+    def test_repeated_structure_is_an_explicit_limitation(self):
+        rng = random.Random(7)
+        points = [tuple(rng.random() for _ in range(3)) for _ in range(150)]
+        source, target = self.root/'repeat-source.pcd', self.root/'repeat-target.pcd'
+        write_pcd(source, points)
+        write_pcd(target, points + [(x+5, y, z) for x, y, z in points])
+        initial, truth = self.root/'repeat-initial.txt', self.root/'repeat-truth.txt'
+        write_matrix(initial, transform(0, (5, 0, 0)))
+        write_matrix(truth, transform(0, (0, 0, 0)))
+        report = self.invoke(['--source', source, '--target', target, '--voxel-size', '.005',
+                              '--initial', initial, '--truth', truth], 0)
+        self.assertTrue(report['accepted'])
+        self.assertGreater(report['inlier_ratio'], .99)
+        self.assertLess(report['rmse_m'], 1e-5)
+        self.assertAlmostEqual(report['translation_error_m'], 5, places=4)
+        print('repeated_structure_limitation:', {k: report[k] for k in
+              ('accepted', 'rmse_m', 'inlier_ratio', 'translation_error_m')}, flush=True)
+
 
 if __name__ == "__main__":
     unittest.main(argv=[sys.argv[0], *unittest_args], verbosity=2)

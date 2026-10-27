@@ -1,0 +1,20 @@
+[
+  {
+    "case": "strict_mismatch",
+    "simulated_package_version": "1.15.2",
+    "exit_code": 1,
+    "expected_nonzero": true
+  },
+  {
+    "case": "warn_mismatch",
+    "simulated_package_version": "1.15.2",
+    "exit_code": 0,
+    "expected_nonzero": false
+  },
+  {
+    "case": "strict_match",
+    "simulated_package_version": "1.15.1",
+    "exit_code": 0,
+    "expected_nonzero": false
+  }
+]

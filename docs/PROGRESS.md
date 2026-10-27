@@ -2,6 +2,15 @@
 
 更新时间：2026-10-27（Asia/Shanghai）。当前阶段：已按用户授权发布至GitHub Public仓库。
 
+## README展示更新
+
+以5ca6c34为基线，README按技术作品展示重组为九部分；KITTI效果靠前、实现与库调用分工明确，技术讨论放在后部。
+新增QUICKSTART承接较长Windows命令；审查/整改原文、算法、实验原件和LICENSE保持不变。
+GitHub原始README/许可证署名确认为Wang Chenqi；README明确维护者王陈琦（Wang Chenqi），不按浏览器译文改动许可证。
+四行实验数字、文档/图片链接、六图哈希检查通过；代表性KITTI CLI实际运行结果与归档一致。
+本次未重跑全部36组或完整CTest，既有验收结果保持原意义；修改前后摘要见README_REDESIGN。
+用户已授权该文档优化提交正常推送至origin/main；最终同步与公开页面检查证据保存在build/readme-redesign-*。
+
 ## 当前状态
 
 - 仓库：https://github.com/bill161719-cloud/lidar-icp-localization

@@ -29,3 +29,4 @@
 | V01 | 验收/主 | P0 | 独立审查与复现 | C03,FIX01,FIX02,FIX03,FIX04,FIX05 | REVIEW_REPORT_V2：原P1关闭，无新P0/P1；教学/工程展示范围通过，保留首轮原文和重复结构局限 | DONE |
 | R01 | 主 | P1 | GitHub 发布准备 | V01 | 复审报告入库、README/许可/文件历史扫描、全新Release/CTest10/10及36组归档核验通过 | DONE |
 | R02 | 主 | P1 | 远程公开发布 | R01,用户明确确认 | 用户网页创建Public并授权；精确origin、非强制推送、远程main及公开README/图片/许可核验，见PUBLICATION | DONE |
+| R03 | 主 | P1 | README技术作品展示重构 | R02 | 九部分结构、真实道路图靠前、数据/链接/许可核对、正确中文姓名及代表性CLI验证；摘要见README_REDESIGN | DONE |

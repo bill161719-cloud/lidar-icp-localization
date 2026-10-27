@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-27 Asia/Shanghai",
+  "base_commit": "9fc3057d54d7072dbbbf7affdf07ac8cd3663e8d",
+  "python": "3.11.5",
+  "numpy": "2.4.4",
+  "matplotlib": "3.10.8",
+  "input_sha256": {
+    "build-pcl/experiments-v2/synthetic/source.pcd": "303a322687dec4a4bc6365726f592910b94d61bfa9ac8e2b107d7a4783ad0f54",
+    "build-pcl/experiments-v2/synthetic/target.pcd": "9aa67cce8ef7c8214f9c8030420e621534bad385099baefd816f55fe0d1be05b",
+    "build-pcl/experiments-v2/synthetic/truth.txt": "e500b152e5301777f0692865ab89a4e816d5081ddb837ef643f810259704c9dc",
+    "build-pcl/experiments-v2/synthetic/metadata.json": "8977278622384935ebc85766e8381aa313f01679a0a7998995948c29aca7a484",
+    "build-pcl/experiments-v2/noisy_target.pcd": "27c47ed755fbffa72456de2aefc1b8f4d910085462c5a9bd9dbde2c9bd50506a",
+    "build-pcl/experiments-v2/outlier_source.pcd": "749440f25bd41a77842571d115c3f52f0f496e237e7dbd957368236ffa39c710",
+    "build-pcl/experiments-v2/partial_target.pcd": "e3738dc0429e2718536d9746d585958ba7619f2985f984093662780bb6cea06e",
+    "build-pcl/experiments-v2/bad_initial.txt": "1459c66dd3d7b07f1dfecdf0aca5bac016448284b985af3865c9f0adfd1e4110",
+    "data/kitti/drive_0005_pair/0000000000.bin": "956976a1b391b18a17c42719212ef5de5e91e8ab986f7b79717343b126373ad3",
+    "data/kitti/drive_0005_pair/0000000001.bin": "31e07ff7ffd67c2347a2cec3c8504d1d5fb35a2d22b6b02e2998470a230f188f",
+    "data/kitti/drive_0005_pair/0000000000.pcd": "5e00bbfdc61d741671da5fa88e52c24087e570be2d01a1702f5a21d90d173f8c",
+    "data/kitti/drive_0005_pair/0000000001.pcd": "e037084ed2d86b130f9ebc0702fd28b60effad776eaf1a181e2dc58cbad01c80",
+    "data/kitti/drive_0005_pair/timestamps.txt": "33529e08de8e7604d64d4f00398b501497568312dbf9398b96655688c8bd8387"
+  },
+  "figure_sha256": {
+    "kitti_alignment.png": "82b318ecf2185e514a5d3e7cb0bff73e0d26501657c536770315c74c0786efd8",
+    "kitti_raw.png": "468f0a3167a99a4be0465d8355984052653d37445b65dbbe1a22d0df022242cd",
+    "synthetic_alignment.png": "3480cd6ff0302cd66a4065eba467988a29bc69acff7e4b8073a27bb13611adbf",
+    "synthetic_errors.png": "497341c4299bd94aa75cf3bcb52392e9e2e86ebc04d170f0ecb6111fa7e5c01c",
+    "synthetic_raw.png": "69b999c20931ca37d6c552161d81152ba9777c9a7fc5c768d243dcd35cfdf2bf",
+    "voxel_comparison.png": "2ea3da26da1560efdbd1464a2f23fe054a2d379f07db771ec8062357b492df8e"
+  },
+  "download": {
+    "url": "https://s3.eu-central-1.amazonaws.com/avg-kitti/raw_data/2011_09_26_drive_0005/2011_09_26_drive_0005_sync.zip",
+    "etag": "\"6a880679a3e3eda8a0ef83abc5354eb1-78\"",
+    "files": [
+      {
+        "entry": "2011_09_26/2011_09_26_drive_0005_sync/velodyne_points/data/0000000000.bin",
+        "file": "0000000000.bin",
+        "bytes": 1974352,
+        "crc32": "208c5e6b",
+        "sha256": "956976a1b391b18a17c42719212ef5de5e91e8ab986f7b79717343b126373ad3"
+      },
+      {
+        "entry": "2011_09_26/2011_09_26_drive_0005_sync/velodyne_points/data/0000000001.bin",
+        "file": "0000000001.bin",
+        "bytes": 1978928,
+        "crc32": "790a5ded",
+        "sha256": "31e07ff7ffd67c2347a2cec3c8504d1d5fb35a2d22b6b02e2998470a230f188f"
+      },
+      {
+        "entry": "2011_09_26/2011_09_26_drive_0005_sync/velodyne_points/timestamps.txt",
+        "file": "timestamps.txt",
+        "bytes": 4620,
+        "crc32": "e003136c",
+        "sha256": "33529e08de8e7604d64d4f00398b501497568312dbf9398b96655688c8bd8387"
+      }
+    ],
+    "requests": [
+      {
+        "range": "-65536",
+        "content_range": "bytes 645875364-645940899/645940900",
+        "bytes": 65536
+      },
+      {
+        "range": "645812110-645940877",
+        "content_range": "bytes 645812110-645940877/645940900",
+        "bytes": 128768
+      },
+      {
+        "range": "527215657-527215686",
+        "content_range": "bytes 527215657-527215686/645940900",
+        "bytes": 30
+      },
+      {
+        "range": "527215788-529190139",
+        "content_range": "bytes 527215788-529190139/645940900",
+        "bytes": 1974352
+      },
+      {
+        "range": "591394108-591394137",
+        "content_range": "bytes 591394108-591394137/645940900",
+        "bytes": 30
+      },
+      {
+        "range": "591394239-593373166",
+        "content_range": "bytes 591394239-593373166/645940900",
+        "bytes": 1978928
+      },
+      {
+        "range": "345829587-345829616",
+        "content_range": "bytes 345829587-345829616/645940900",
+        "bytes": 30
+      },
+      {
+        "range": "345829713-345834332",
+        "content_range": "bytes 345829713-345834332/645940900",
+        "bytes": 4620
+      }
+    ],
+    "downloaded_bytes": 4152294,
+    "license": "CC BY-NC-SA 3.0",
+    "source": "https://registry.opendata.aws/kitti/"
+  },
+  "conversion": [
+    {
+      "input_file": "0000000000.bin",
+      "points": 123397,
+      "input_bytes": 1974352,
+      "input_sha256": "956976a1b391b18a17c42719212ef5de5e91e8ab986f7b79717343b126373ad3",
+      "output_sha256": "5e00bbfdc61d741671da5fa88e52c24087e570be2d01a1702f5a21d90d173f8c",
+      "format": "little-endian float32 XYZI; binary PCD",
+      "units": "XYZ metres; intensity unchanged",
+      "frame": "Velodyne: x forward, y left, z up",
+      "coordinates_changed": false,
+      "motion_compensation_applied": false
+    },
+    {
+      "input_file": "0000000001.bin",
+      "points": 123683,
+      "input_bytes": 1978928,
+      "input_sha256": "31e07ff7ffd67c2347a2cec3c8504d1d5fb35a2d22b6b02e2998470a230f188f",
+      "output_sha256": "e037084ed2d86b130f9ebc0702fd28b60effad776eaf1a181e2dc58cbad01c80",
+      "format": "little-endian float32 XYZI; binary PCD",
+      "units": "XYZ metres; intensity unchanged",
+      "frame": "Velodyne: x forward, y left, z up",
+      "coordinates_changed": false,
+      "motion_compensation_applied": false
+    }
+  ],
+  "timestamp_pair": [
+    "2011-09-26 13:04:32.335337762",
+    "2011-09-26 13:04:32.438625628"
+  ],
+  "validation": "stdout 与文件逐项相等；退出码/accepted 一致；拒绝位姿为 null；无真值误差为 null；人工精度通过",
+  "plotting": "原始完整点云作变换；道路图每 3/5 点显示一点并裁剪视窗；不使用诊断矩阵绘制对齐",
+  "timing": "单次 align 耗时，仅供观察，非性能基准"
+}

@@ -1,0 +1,184 @@
+{
+  "date": "2026-10-27T19:19:36.724938+08:00",
+  "base_commit": "9fc3057d54d7072dbbbf7affdf07ac8cd3663e8d",
+  "working_tree_dirty": true,
+  "binary_sha256": {
+    "lidar_icp": "c4ed09c20639c76a81569413a027ee153c9694c0554b1436db6356e356d45a94",
+    "generate_test_data": "9af201d615c8f55fce57bbee0fc1711e91ae340691627a0c301e4439dcc30729"
+  },
+  "source_sha256": {
+    "CMakeLists.txt": "00b853bbc29aef99db52858639aa91d8195e091332cc0f21e4191719dfe59940",
+    "tools/generate_test_data.cpp": "4407a921068064af5c5ab7941ad298aceb78df9403379c7ad1807bb83a3f11b3",
+    "tools/run_experiments.py": "39e0b6b45d78464f63d7e1e58c6abc48098779c770c7259b113d388d202be8be",
+    "src/cloud_processor.cpp": "a643c7be443996872a4f2f0e570432fef9f9a636e6627392aebbe0c35eb38178",
+    "src/icp_registration.cpp": "68356223bc5a76a608963c75da8bc96e149b6b28d2fab013037436b2f8a56045",
+    "src/main.cpp": "ce26674def7062a6878b62afde658c4832e572d754e18af3b2258663480e08f3",
+    "src/pose_utils.cpp": "4cab522797725514abe36266acdfe5496db5f2b09f401ebacc5e8f8a81d7ace5",
+    "src/registration_pipeline.cpp": "022d1b1a8673c154dbf8f2b740d217701c3d0522779d54becc0982c75c812096",
+    "include/cloud_processor.h": "7af02aa914e3b07b108ed7125acedb02e8fdc755190cfa8e84ec4a8b1e49983b",
+    "include/cloud_types.h": "01561b0a39a9ecac63380218837bfbc240158f8ecaa9a4c12ca85c7e77632ee3",
+    "include/icp_registration.h": "0aa42d315b4afec943553cbdee1dd70c0def1d270c6280a23d9871701e3f92e2",
+    "include/pose_utils.h": "e2985a3e500e208793895fce24fb4f4dea8642c027989efe2792c5c4555e1249",
+    "include/registration_pipeline.h": "0a0bfe8ba41289acbfa2c3e919bc17d7adbad9a4e4272e2497629329aa1cf356"
+  },
+  "python": "3.11.5",
+  "numpy": "2.4.4",
+  "matplotlib": "3.10.8",
+  "input_sha256": {
+    "build-final-c/main-experiment-data-v2/bad_initial.txt": "1459c66dd3d7b07f1dfecdf0aca5bac016448284b985af3865c9f0adfd1e4110",
+    "build-final-c/main-experiment-data-v2/noisy_target.pcd": "27c47ed755fbffa72456de2aefc1b8f4d910085462c5a9bd9dbde2c9bd50506a",
+    "build-final-c/main-experiment-data-v2/outlier_source.pcd": "749440f25bd41a77842571d115c3f52f0f496e237e7dbd957368236ffa39c710",
+    "build-final-c/main-experiment-data-v2/partial_target.pcd": "e3738dc0429e2718536d9746d585958ba7619f2985f984093662780bb6cea06e",
+    "build-final-c/main-experiment-data-v2/sweep_initial_tx_0.0.txt": "59954886bdf7ef2dfe5484c0ac1259fec6780f5b2a998c0ebeab397236417a4a",
+    "build-final-c/main-experiment-data-v2/sweep_initial_tx_0.3.txt": "486433f4feebb8a1eb1c8fa98ce12341b5a6704169d4a6e15913405d68b9079d",
+    "build-final-c/main-experiment-data-v2/sweep_initial_tx_1.0.txt": "904025ef3c55fb14402a9acbc023fa4e3005cae7b3329d074d46b42aa6e2d300",
+    "build-final-c/main-experiment-data-v2/sweep_initial_tx_3.0.txt": "338fe321d07727520fc78815eda9172775874002494dddcb378f2b5f1040f1f2",
+    "build-final-c/main-experiment-data-v2/sweep_initial_tx_30.0.txt": "0ba30a0acbf766cc7670244a24a625fab20c5f178c89165f579f3827fd4bbdfa",
+    "build-final-c/main-experiment-data-v2/sweep_line_initial.txt": "370a6abee6f7c863a72ec9bc1f4ee2822ab2310f95b12cb2422f978f4082b67f",
+    "build-final-c/main-experiment-data-v2/sweep_line_source.pcd": "a8e4210302ca33538908a5dc00a231d7fdbbf2c146895c22a0a88bec773cb04e",
+    "build-final-c/main-experiment-data-v2/sweep_line_target.pcd": "07aaf142f129c56a3c2c7c6d352d0eef1cfb844d4570b133216e33d73fc18cd2",
+    "build-final-c/main-experiment-data-v2/sweep_noise_0.0.pcd": "b00e9b8d4b2f880d628ef1d6596cb3a5096dd864c250400e6e4c766b6be295bc",
+    "build-final-c/main-experiment-data-v2/sweep_noise_0.01.pcd": "054f8e576c5d6790d48167db556897a4184932bcbd2bc7b4b0f4df8960855073",
+    "build-final-c/main-experiment-data-v2/sweep_noise_0.03.pcd": "5e9b7fb7b61fe32218c324f5a91750bc7d2406543e59870db17b35cc08ee259a",
+    "build-final-c/main-experiment-data-v2/sweep_noise_0.08.pcd": "697f4340e196057314734ed3824ed1dce4219b62ac04dc56dd4a7674d1806b2e",
+    "build-final-c/main-experiment-data-v2/sweep_outliers_0.0.pcd": "a722ebee2d134ca53bf03cf83fc948bcd3220c4744e953f18e9a73fc20998b16",
+    "build-final-c/main-experiment-data-v2/sweep_outliers_0.1.pcd": "791d3b780f90516149b0a651148025d4974bc73aa02729409b4e2d72bb6f91e4",
+    "build-final-c/main-experiment-data-v2/sweep_outliers_0.5.pcd": "675dc7a90b39b9b2262a1d8af44a5e76b4a72d7f19c4343c31387da0c40271fe",
+    "build-final-c/main-experiment-data-v2/sweep_outliers_1.0.pcd": "bb91c13113bdb9cc9d5c4543a9cf35c328026a25900e3b1809a41d44230b45ba",
+    "build-final-c/main-experiment-data-v2/sweep_spatial_crop_0.1.pcd": "f3c2047f029feed519dafd038ed8ad5a164f305744944843f9c7b942b93cd1f4",
+    "build-final-c/main-experiment-data-v2/sweep_spatial_crop_0.25.pcd": "804ada07eaa8786d003b1e6b57b4897ec7ed77cc65427af37f7c51860d8b5efb",
+    "build-final-c/main-experiment-data-v2/sweep_spatial_crop_0.5.pcd": "c2809a71b2c8573e45937637eeb422dafab0cdd56c5fe37cc2ec83932bafbc47",
+    "build-final-c/main-experiment-data-v2/sweep_spatial_crop_0.75.pcd": "c8e689528f7064137e81feb6e7abc7604555f7c177a5792f428be93fc164d153",
+    "build-final-c/main-experiment-data-v2/sweep_spatial_crop_1.0.pcd": "b00e9b8d4b2f880d628ef1d6596cb3a5096dd864c250400e6e4c766b6be295bc",
+    "build-final-c/main-experiment-data-v2/sweep_symmetric_plane_initial.txt": "6f3ab41a72122a331a0d655ec0a6e4dac426e3b7d79335a12cf55045fbbdd89f",
+    "build-final-c/main-experiment-data-v2/sweep_symmetric_plane_source.pcd": "c2b6ff3415d0659d9160b1594ee115ec4a735739bd0f9865d100f143b41a9543",
+    "build-final-c/main-experiment-data-v2/sweep_symmetric_plane_target.pcd": "3a6ff18d2f44772e85974071bf1f850cf77d8ede7ee39d0cc239c122446f392f",
+    "build-final-c/main-experiment-data-v2/sweep_target_samples_0.1.pcd": "5d339d40e83b0f35625302c81117bb1f39356af5ce527681c5896de0910dbece",
+    "build-final-c/main-experiment-data-v2/sweep_target_samples_0.25.pcd": "4f9c2d2fa7c2d0cecefcf6bcc358293e6793b099d503694026c91e81f4dc824c",
+    "build-final-c/main-experiment-data-v2/sweep_target_samples_0.5.pcd": "ad94e80e8ff91fbe9a561da3f75977fb59ccb49bb90b782b499f11e0c543e2a1",
+    "build-final-c/main-experiment-data-v2/sweep_target_samples_0.75.pcd": "2d88e15d995243bebebef9afc799f0a4d625b9c8b479a87f680f6e15b78d0d39",
+    "build-final-c/main-experiment-data-v2/sweep_target_samples_1.0.pcd": "24c018b1f37901f9f75d8a1b72b583703c2cb0b38a1d72fb52087e4fc545c17a",
+    "build-final-c/main-experiment-data-v2/synthetic/metadata.json": "8977278622384935ebc85766e8381aa313f01679a0a7998995948c29aca7a484",
+    "build-final-c/main-experiment-data-v2/synthetic/source.pcd": "303a322687dec4a4bc6365726f592910b94d61bfa9ac8e2b107d7a4783ad0f54",
+    "build-final-c/main-experiment-data-v2/synthetic/target.pcd": "9aa67cce8ef7c8214f9c8030420e621534bad385099baefd816f55fe0d1be05b",
+    "build-final-c/main-experiment-data-v2/synthetic/truth.txt": "e500b152e5301777f0692865ab89a4e816d5081ddb837ef643f810259704c9dc",
+    "data/kitti/drive_0005_pair/0000000000.bin": "956976a1b391b18a17c42719212ef5de5e91e8ab986f7b79717343b126373ad3",
+    "data/kitti/drive_0005_pair/0000000000.pcd": "5e00bbfdc61d741671da5fa88e52c24087e570be2d01a1702f5a21d90d173f8c",
+    "data/kitti/drive_0005_pair/0000000001.bin": "31e07ff7ffd67c2347a2cec3c8504d1d5fb35a2d22b6b02e2998470a230f188f",
+    "data/kitti/drive_0005_pair/0000000001.pcd": "e037084ed2d86b130f9ebc0702fd28b60effad776eaf1a181e2dc58cbad01c80",
+    "data/kitti/drive_0005_pair/timestamps.txt": "33529e08de8e7604d64d4f00398b501497568312dbf9398b96655688c8bd8387"
+  },
+  "figure_sha256": {
+    "kitti_alignment.png": "82b318ecf2185e514a5d3e7cb0bff73e0d26501657c536770315c74c0786efd8",
+    "kitti_raw.png": "468f0a3167a99a4be0465d8355984052653d37445b65dbbe1a22d0df022242cd",
+    "synthetic_alignment.png": "3480cd6ff0302cd66a4065eba467988a29bc69acff7e4b8073a27bb13611adbf",
+    "synthetic_errors.png": "497341c4299bd94aa75cf3bcb52392e9e2e86ebc04d170f0ecb6111fa7e5c01c",
+    "synthetic_raw.png": "69b999c20931ca37d6c552161d81152ba9777c9a7fc5c768d243dcd35cfdf2bf",
+    "voxel_comparison.png": "2ea3da26da1560efdbd1464a2f23fe054a2d379f07db771ec8062357b492df8e"
+  },
+  "download": {
+    "url": "https://s3.eu-central-1.amazonaws.com/avg-kitti/raw_data/2011_09_26_drive_0005/2011_09_26_drive_0005_sync.zip",
+    "etag": "\"6a880679a3e3eda8a0ef83abc5354eb1-78\"",
+    "files": [
+      {
+        "entry": "2011_09_26/2011_09_26_drive_0005_sync/velodyne_points/data/0000000000.bin",
+        "file": "0000000000.bin",
+        "bytes": 1974352,
+        "crc32": "208c5e6b",
+        "sha256": "956976a1b391b18a17c42719212ef5de5e91e8ab986f7b79717343b126373ad3"
+      },
+      {
+        "entry": "2011_09_26/2011_09_26_drive_0005_sync/velodyne_points/data/0000000001.bin",
+        "file": "0000000001.bin",
+        "bytes": 1978928,
+        "crc32": "790a5ded",
+        "sha256": "31e07ff7ffd67c2347a2cec3c8504d1d5fb35a2d22b6b02e2998470a230f188f"
+      },
+      {
+        "entry": "2011_09_26/2011_09_26_drive_0005_sync/velodyne_points/timestamps.txt",
+        "file": "timestamps.txt",
+        "bytes": 4620,
+        "crc32": "e003136c",
+        "sha256": "33529e08de8e7604d64d4f00398b501497568312dbf9398b96655688c8bd8387"
+      }
+    ],
+    "requests": [
+      {
+        "range": "-65536",
+        "content_range": "bytes 645875364-645940899/645940900",
+        "bytes": 65536
+      },
+      {
+        "range": "645812110-645940877",
+        "content_range": "bytes 645812110-645940877/645940900",
+        "bytes": 128768
+      },
+      {
+        "range": "527215657-527215686",
+        "content_range": "bytes 527215657-527215686/645940900",
+        "bytes": 30
+      },
+      {
+        "range": "527215788-529190139",
+        "content_range": "bytes 527215788-529190139/645940900",
+        "bytes": 1974352
+      },
+      {
+        "range": "591394108-591394137",
+        "content_range": "bytes 591394108-591394137/645940900",
+        "bytes": 30
+      },
+      {
+        "range": "591394239-593373166",
+        "content_range": "bytes 591394239-593373166/645940900",
+        "bytes": 1978928
+      },
+      {
+        "range": "345829587-345829616",
+        "content_range": "bytes 345829587-345829616/645940900",
+        "bytes": 30
+      },
+      {
+        "range": "345829713-345834332",
+        "content_range": "bytes 345829713-345834332/645940900",
+        "bytes": 4620
+      }
+    ],
+    "downloaded_bytes": 4152294,
+    "license": "CC BY-NC-SA 3.0",
+    "source": "https://registry.opendata.aws/kitti/"
+  },
+  "conversion": [
+    {
+      "input_file": "0000000000.bin",
+      "points": 123397,
+      "input_bytes": 1974352,
+      "input_sha256": "956976a1b391b18a17c42719212ef5de5e91e8ab986f7b79717343b126373ad3",
+      "output_sha256": "5e00bbfdc61d741671da5fa88e52c24087e570be2d01a1702f5a21d90d173f8c",
+      "format": "little-endian float32 XYZI; binary PCD",
+      "units": "XYZ metres; intensity unchanged",
+      "frame": "Velodyne: x forward, y left, z up",
+      "coordinates_changed": false,
+      "motion_compensation_applied": false
+    },
+    {
+      "input_file": "0000000001.bin",
+      "points": 123683,
+      "input_bytes": 1978928,
+      "input_sha256": "31e07ff7ffd67c2347a2cec3c8504d1d5fb35a2d22b6b02e2998470a230f188f",
+      "output_sha256": "e037084ed2d86b130f9ebc0702fd28b60effad776eaf1a181e2dc58cbad01c80",
+      "format": "little-endian float32 XYZI; binary PCD",
+      "units": "XYZ metres; intensity unchanged",
+      "frame": "Velodyne: x forward, y left, z up",
+      "coordinates_changed": false,
+      "motion_compensation_applied": false
+    }
+  ],
+  "timestamp_pair": [
+    "2011-09-26 13:04:32.335337762",
+    "2011-09-26 13:04:32.438625628"
+  ],
+  "validation": "stdout 与文件逐项相等；退出码/accepted 一致；拒绝位姿为 null；无真值误差为 null；人工精度通过",
+  "plotting": "原始完整点云作变换；道路图每 3/5 点显示一点并裁剪视窗；不使用诊断矩阵绘制对齐",
+  "timing": "单次 align 耗时，仅供观察，非性能基准"
+}

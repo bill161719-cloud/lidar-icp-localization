@@ -7,7 +7,7 @@
 
 先读 README.md、docs/PROJECT_SPEC.md、ARCHITECTURE.md、INTERFACES.md、TASKS.md、PROGRESS.md、DECISIONS.md（后六项均位于 docs/）。
 执行 `git status --short --branch`、`git log -5 --oneline`。工作区有未知改动时保留，不覆盖、不清理。
-初始化和依赖配置已完成；后续实现须由用户在对应对话启动。不自行派生开发对话或启动模块。
+A/B/C 已集成，当前准备独立审查；没有用户授权不新增算法模块，不自行派生开发对话。
 
 ## 所有权
 
@@ -21,6 +21,7 @@
 
 跨边界改动先说明理由和建议补丁，由主对话审批、实施；模块不得直接改共享 CMake 或进度表。
 首轮集成新增 include/registration_pipeline.h、src/registration_pipeline.cpp、tests/test_pipeline.py 归主对话维护。
+本轮集成的 tools/validate_experiments.py、test_experiment_validation.py、绘图版本锁与总体验收记录也由主对话维护。
 集成层的必要修复可由主对话实施，须记录原因、补回归并重新测试；本轮已修复 pose_utils 的微小旋转误差精度问题。
 使用独立 worktree，禁止多个对话在同一工作目录切换分支。接口变更由主对话统一发布。
 模块交付必须列任务编号、修改文件、分支、提交 ID、编译和测试命令/结果、遗留问题、下一步。

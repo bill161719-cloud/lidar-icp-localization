@@ -76,6 +76,20 @@ if(LIDAR_ENABLE_PCL)
   if(EXISTS "${PROJECT_SOURCE_DIR}/tools/generate_test_data.cpp")
     add_executable(generate_test_data tools/generate_test_data.cpp)
     target_link_libraries(generate_test_data PRIVATE lidar_project_options lidar_dependencies)
+    if(BUILD_TESTING)
+      find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter)
+      add_test(NAME test_experiment_tools
+        COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tools/test_experiment_tools.py"
+          --generator $<TARGET_FILE:generate_test_data>
+          --workdir "${PROJECT_BINARY_DIR}/test-experiment-tools")
+      set_tests_properties(test_experiment_tools PROPERTIES TIMEOUT 120)
+      add_test(NAME test_experiment_validation
+        COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tools/test_experiment_validation.py"
+          --archive "${PROJECT_SOURCE_DIR}/results/metrics/module-c-v2"
+          --figures "${PROJECT_SOURCE_DIR}/results/figures/module-c-v2"
+          --workdir "${PROJECT_BINARY_DIR}/test-experiment-validation")
+      set_tests_properties(test_experiment_validation PROPERTIES TIMEOUT 120)
+    endif()
   endif()
 
   if(BUILD_TESTING)

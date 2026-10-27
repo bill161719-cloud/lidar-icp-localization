@@ -1,0 +1,4 @@
+# Optional plotting/reproduction environment, independently verified with CPython 3.11.5.
+# Standard CTest tests do not import these packages.
+numpy==2.4.4
+matplotlib==3.10.8

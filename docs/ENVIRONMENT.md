@@ -144,3 +144,10 @@ vcpkg 评估依据：[MinGW 平台支持范围](https://learn.microsoft.com/en-u
 最小 PCL OFF 模式另有 3/3 回归通过。依赖版本、安装前缀、GCC 和对齐设置未改变。
 test_pipeline 使用 Python >=3.9 的标准库驱动真实 C++ 进程，不依赖 Python PCL 绑定或第三方 Python 包。
 JSON 与日志、具体数值及警告分析见 INTEGRATION_AB.md；不将人工 smoke check 当真实道路验收。
+
+## 模块 C 集成后（2026-10-27）
+
+全新 build-final-c Release 构建成功，接入离线工具与损坏检测后完整CTest10/10。
+CPython3.11.5 + NumPy2.4.4 + Matplotlib3.10.8 已有环境实际执行35组实验并重绘六图，未新装包或更换编译器。
+绘图可选版本锁在 tools/requirements-experiments.txt，普通CTest无需这些包或KITTI原始数据。
+main独立数据获取/转换、42输入哈希、35报告与六图复验记录见 EXPERIMENTS.md 和 results/metrics/main-review。

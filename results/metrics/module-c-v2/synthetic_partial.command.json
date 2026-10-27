@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "build-pcl\\lidar_icp.exe",
+    "--source",
+    "build-pcl\\experiments-v2\\synthetic\\source.pcd",
+    "--target",
+    "build-pcl\\experiments-v2\\partial_target.pcd",
+    "--output",
+    "results\\metrics\\module-c-v2\\synthetic_partial.json",
+    "--voxel-size",
+    "0.1",
+    "--max-iterations",
+    "100",
+    "--max-correspondence-distance",
+    "1.0",
+    "--evaluation-distance",
+    "0.2",
+    "--max-rmse",
+    "0.1",
+    "--truth",
+    "build-pcl\\experiments-v2\\synthetic\\truth.txt"
+  ],
+  "exit_code": 4
+}

@@ -1,0 +1,48 @@
+{
+  "reports_checked": 35,
+  "figures_checked": 6,
+  "input_hashes_checked": 42,
+  "reference_cases_matched": [
+    "synthetic_v0.02",
+    "synthetic_v0.1",
+    "synthetic_v0.3",
+    "synthetic_noise_outliers",
+    "synthetic_bad_initial",
+    "synthetic_partial",
+    "kitti_v0.1",
+    "kitti_v0.3",
+    "kitti_v0.6",
+    "kitti_strict_gate"
+  ],
+  "alignment_checks": {
+    "synthetic_v0.02": {
+      "sample_stride": 3,
+      "source_queries": 800,
+      "full_target_points": 2400,
+      "before": {
+        "median_nearest_m": 0.24574042149439876,
+        "rmse_nearest_m": 0.31698574501893173
+      },
+      "after": {
+        "median_nearest_m": 2.6484305691727254e-05,
+        "rmse_nearest_m": 2.6279558450074138e-05
+      },
+      "meaning": "固定原始 source 子样本到完整原始 target 的单向距离；不是 CLI 体素内点 RMSE 或车辆定位误差"
+    },
+    "kitti_v0.3": {
+      "sample_stride": 124,
+      "source_queries": 998,
+      "full_target_points": 123397,
+      "before": {
+        "median_nearest_m": 0.1043669591347986,
+        "rmse_nearest_m": 0.2743072311900062
+      },
+      "after": {
+        "median_nearest_m": 0.06282215576819485,
+        "rmse_nearest_m": 0.1734374015811394
+      },
+      "meaning": "固定原始 source 子样本到完整原始 target 的单向距离；不是 CLI 体素内点 RMSE 或车辆定位误差"
+    }
+  },
+  "result": "passed"
+}

@@ -41,7 +41,7 @@ Eigen3_DIR 必须指向主目录 `.local-deps/eigen-3.4.0/share/eigen3/cmake`，
 运行时 PATH 由脚本临时加入共享 PCL bin 和 UCRT64 bin，脚本结束恢复，不修改全局 PATH。
 各模块不下载或重新构建 PCL；共享依赖仅由主对话维护。内存紧张时不要同时启动三轮编译。
 
-准备阶段有 4 项 bootstrap/依赖测试；最新 main 集成 A/B 后完整 CTest 应有 8 项全部通过，依赖程序输出 PCL 1.15.1、Eigen 3.4.0。
+准备阶段有4项基础检查，A/B阶段为8项；最新main集成C后完整CTest应有10项通过，依赖程序输出PCL1.15.1、Eigen3.4.0。
 这不代表模块算法完成；添加实现和测试后重跑同一脚本，CMake 自动启用 INTERFACES.md 指定目标。
 
 ## 文件边界与验收
@@ -53,7 +53,7 @@ Eigen3_DIR 必须指向主目录 `.local-deps/eigen-3.4.0/share/eigen3/cmake`，
 
 模块实现提交必须附任务编号、文件清单、分支/提交、实际构建与测试结果、遗留问题。
 模块不得修改 TASKS/PROGRESS 自行标 DONE；主对话审核与完整测试后更新状态。
-模块代码和实验尚未开始，只有环境准备可标 DONE。
+准备阶段当时只有环境可标DONE；当前集成状态以末节和PROGRESS为准，不能把基础检查当作算法验收。
 
 ## A/B 首轮集成后的状态
 
@@ -62,3 +62,9 @@ main 的应用流水线、质量门禁、微小旋转误差修复和 9 个 CLI �
 C worktree 已从 4cfce35 快进到该集成提交，自身重新配置/编译/CTest 8/8 通过；日志在主目录 build/module-c-after-integration.log。
 最终进度文档随后快进同步，最终 HEAD 以 git 命令为准。C 可以直接在原文件夹启动，无需重建 worktree 或 PCL。
 后续若 A/B 继续开发，先由主对话协调同步 main 的集成修复，不能从旧交付提交继续覆盖数值修复。
+
+## 模块 C 正式交付之后
+
+C 原交付分支为 f85214f，已由主对话在 main 正式集成、全新构建并独立复跑35组实验，完整CTest10/10。
+本轮不改写 C 分支或 worktree；需要后续修改时先由主对话协调同步最新main。
+独立质量审查应打开主目录、读 REVIEW_CHECKLIST.md，用新的build-independent-review目录，不在原模块树里切换分支。

@@ -43,7 +43,7 @@ Linux 等已有工具链可省略 `-G "MinGW Makefiles"`，运行 `./build/lidar
 
 缺依赖或包版本不匹配应明确失败。脚本只修改当前进程 DLL 搜索路径，完成后恢复，不更改全局配置。
 dependency_check 直接调用第三方体素滤波、恒等 ICP 和 VTK 场景构建，不打开渲染窗口；
-它不验证 GUI 实际渲染、真实点云精度或模块实现。模块实现后主对话将接入库目标和功能测试。
+它不验证 GUI 实际渲染、真实点云精度或模块实现。模块新增所属源文件和测试后，CMake 会自动启用对应库/测试目标。
 共享依赖时设置 LIDAR_DEPS_ROOT 或传 -DependencyRoot；CMake 不在 PATH 时可传 -CMake。
 
 ## 目录与文档
@@ -72,17 +72,18 @@ source 到 target 的坐标变换不能无条件当作车辆实际运动。
 ## 多对话开发
 
 主对话独占共享 CMake、主程序和总体管理文件，各模块使用独立 worktree。
-基础提交后主对话建立三个 feature 分支；用户启动模块对话前可在根目录执行以下命令。
-这些命令创建同级目录，需要相应写入权限；本次初始化只创建分支，不创建 worktree 或启动模块。
+三个 feature 分支及同级独立 worktree 已创建，分别完成 PCL ON 配置、构建和 CTest 4/4。
+启动模块对话时直接打开对应目录，不重复创建 worktree：
 
 ```powershell
-git worktree add ../lidar-icp-module-a feature/cloud-processing
-git worktree add ../lidar-icp-module-b feature/icp-registration
-git worktree add ../lidar-icp-module-c feature/experiments
+../lidar-icp-module-a    feature/cloud-processing
+../lidar-icp-module-b    feature/icp-registration
+../lidar-icp-module-c    feature/experiments
 ```
 
 各模块先检查分支/状态、读规范，只改自己拥有的文件。交付提交 ID、文件清单、实际测试及遗留问题。
 主对话审查与集成后运行完整测试，才标记 DONE；模块不能自己修改共享任务表。
+共享依赖验证的正确参数和本机目录见 [WORKTREES](docs/WORKTREES.md)；模块不重新安装 PCL，独占自己的 build-pcl/。
 
 ## GitHub 发布流程（尚未执行）
 

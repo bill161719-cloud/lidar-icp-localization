@@ -13,6 +13,12 @@
 各分支保留 015a535 与 88279bf 历史，不重新建分支、不改写已有提交。
 不要在主目录或其他模块目录切换分支；不要复制整个 .git 或依赖目录。
 
+2026-10-27 已实际完成：三个 worktree 在准备提交 70b448a（015a535 的后继）上分别配置、编译、
+执行 CTest 4/4 和直接运行依赖程序，全部成功；随后仅同步最终进度文档提交。
+最终启动提交以各树 `git log -1 --oneline` 为准，三个分支与 main 统一快进，不在提交中自引用哈希。
+验证日志在主目录 build/lidar-icp-module-a-verify.log、lidar-icp-module-b-verify.log、lidar-icp-module-c-verify.log。
+各树原始 CTest 日志在其 build-pcl/Testing/Temporary/LastTest.log。
+
 ## 在各自目录运行
 
 在 Codex 中分别打开上表的文件夹。先读 AGENTS.md、README.md、docs/PROJECT_SPEC.md、

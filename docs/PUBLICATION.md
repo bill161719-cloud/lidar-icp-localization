@@ -56,3 +56,17 @@ KITTI道路与混合成果按THIRD_PARTY及ATTRIBUTION中的范围处理，未�
 不是完整SLAM/FAST-LIO或LiDAR-IMU紧耦合；KITTI内点RMSE不是车辆定位精度。
 重复结构5m错误及其他歧义仍存在，即使收敛和低RMSE也不保证真实位姿。
 没有新增通用抗退化、多帧轨迹、实时性能或交互PCL Render能力声明。
+
+## 2026-10-30 本地交互网页更新
+
+用户确认本地演示界面后，明确授权将该版本更新至现有GitHub仓库。
+推送前main工作区干净；远程main为efe315a，本地c68640b领先1个提交、无远程独有提交。
+精确origin仍为https://github.com/bill161719-cloud/lidar-icp-localization.git。
+13个修改/新增文件检查通过：不含原始道路数据、编译产物、本地依赖、个人目录或匹配到的密钥模式；新增文件均小于100KB。
+普通git push origin main成功，将efe315a推进到c68640b，保留历史且未强制推送。
+随后同步本发布记录与PROGRESS；最终远程提交、文件内容与工作区状态以build/web-demo-publish-final-verification.json为准。
+
+本次发布复用上一轮实际执行的Release构建、CTest10/10、新网页独立测试8/8与浏览器交互验证，
+证据见WEB_DEMO及build/web-demo-*；仅推送和更新状态文档，没有重新运行36组实验或声称完成新的独立审查。
+发布的是本地网页源代码和启动说明，实际PCL计算仍需本机运行服务；未部署GitHub Pages或在线C++服务。
+原算法、历史指标、六图及审查原文保持不变，第三方与KITTI许可范围继续适用。

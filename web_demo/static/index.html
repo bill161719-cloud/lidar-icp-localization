@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LiDAR 配准实验台 · Wang Chenqi</title>
+  <link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script>
+</head>
+<body>
+<header><a class="brand" href="/">L<span>◆</span>DAR <small>REGISTRATION LAB</small></a><div class="header-right"><span class="local-dot"></span> LOCAL / OFFLINE <span class="separator">|</span> 王陈琦 · Wang Chenqi</div></header>
+<main>
+  <div class="intro"><div><p class="eyebrow">POINT CLOUD · GEOMETRY · RELATIVE POSE</p><h1>从道路点云，到相对位姿。</h1><p class="subtitle">C++17 / PCL ICP / Eigen SE(3) · 两帧点云配准交互演示</p></div><div class="pipeline"><span>01 点云输入</span><b>→</b><span>02 预处理</span><b>→</b><span>03 ICP 配准</span><b>→</b><span>04 质量评估</span></div></div>
+  <div class="workspace">
+    <aside class="panel control-panel">
+      <div class="panel-title"><h2>实验配置</h2><span class="index">01</span></div>
+      <label for="dataset">点云场景</label><select id="dataset" disabled><option>连接本地服务…</option></select>
+      <p id="dataset-note" class="muted"></p>
+      <div class="file-pair"><span class="source-dot">●</span> source <strong id="source-label">—</strong><span class="target-dot">●</span> target <strong id="target-label">—</strong></div>
+      <div class="section-line"></div>
+      <form id="run-form">
+        <label for="voxel">体素边长 <span>m</span></label><input id="voxel" type="number" min="0.005" max="2" step="0.005" value="0.3" required>
+        <label for="iterations">最大迭代次数</label><input id="iterations" type="number" min="1" max="200" step="1" value="100" required>
+        <details><summary>匹配与质量参数</summary><label for="correspondence">最大对应距离 / m</label><input id="correspondence" type="number" min="0.01" max="10" step="0.01" value="1" required><label for="evaluation">内点评估距离 / m</label><input id="evaluation" type="number" min="0.01" max="5" step="0.01" value="0.5" required><label for="max_rmse">RMSE 接受上限 / m</label><input id="max_rmse" type="number" min="0.001" max="2" step="0.001" value="0.2" required></details>
+        <button id="run" class="primary" type="submit" disabled>运行 C++ 配准 <span>↗</span></button>
+      </form>
+      <button id="replay" class="secondary" disabled>加载已验证实验</button>
+      <button id="coarse" class="text-button" disabled>查看 0.6 m 质量拒绝案例 →</button>
+      <p class="small muted">初始变换：单位矩阵。显示点仅做抽样，C++ 使用完整输入执行清理、体素过滤和 ICP。</p>
+    </aside>
+    <section class="panel viewer-panel">
+      <div class="panel-title"><h2>三维点云视图</h2><span id="mode-badge" class="badge neutral">尚未运行</span></div>
+      <div class="viewer-toolbar"><div class="segments" aria-label="配准视图"><button id="before" class="active">配准前</button><button id="after" disabled>配准后</button></div><div class="view-actions"><button id="top" title="俯视">俯视</button><button id="reset" title="恢复相机">复位</button><button id="fullscreen" title="全屏">全屏 ⛶</button></div></div>
+      <div class="canvas-wrap" id="canvas-wrap"><canvas id="cloud" aria-label="可旋转缩放的三维点云视图"></canvas><div class="view-label" id="view-label">SOURCE → TARGET · METRES</div><div class="view-legend"><label><input type="checkbox" id="show-source" checked><i class="source-swatch"></i> source</label><label><input type="checkbox" id="show-target" checked><i class="target-swatch"></i> target</label></div><div id="canvas-empty">正在读取本地点云…</div><div class="canvas-help">拖动旋转 · 滚轮缩放 · Shift + 拖动平移</div></div>
+      <div class="viewer-footer"><span id="display-count">—</span><span>右手坐标 · XYZ / m · 浏览器 Canvas 交互渲染</span></div>
+    </section>
+    <aside class="panel result-panel">
+      <div class="panel-title"><h2>配准结果</h2><span class="index">02</span></div>
+      <div id="quality" class="quality waiting">等待实验结果</div>
+      <div class="metric"><span>内点 RMSE <small>m</small></span><strong id="rmse">—</strong></div>
+      <div class="metric"><span>内点率</span><strong id="ratio">—</strong></div>
+      <div class="metric"><span>ICP 耗时 <small>ms</small></span><strong id="elapsed">—</strong></div>
+      <div class="mini-metrics"><div>收敛状态<strong id="converged">—</strong></div><div>内点数量<strong id="inliers">—</strong></div></div>
+      <div class="section-line"></div><h3>预处理点数 <small>source / target</small></h3><div id="point-counts" class="point-counts">原始 → 有限点 → 体素输出</div>
+      <div class="section-line"></div><h3>平移向量 <small>m</small></h3><div id="translation" class="translation">x —　y —　z —</div>
+      <div id="truth-errors" class="small"></div>
+      <button id="download" class="secondary" disabled>导出本次 JSON</button>
+    </aside>
+  </div>
+  <div id="status" class="status" role="status" aria-live="polite">正在连接本地服务…</div>
+  <div class="analysis-grid">
+    <section class="panel matrix-panel"><div class="panel-title"><h2>相对位姿 · T<sub>target←source</sub></h2><span class="index">03</span></div><p class="muted small">p_target = T_target_source × p_source · 长度 m，角度 rad</p><pre id="matrix">等待有效配准结果</pre><p id="matrix-note" class="small muted">仅展示通过质量门禁的有效变换。</p></section>
+    <section class="panel parameter-panel"><div class="panel-title"><h2>参数分析 · 体素与残差</h2><span class="badge neutral">历史实验</span></div><img src="/voxel.png" alt="合成与KITTI数据的体素边长和内点RMSE曲线"><p class="small muted">曲线来自已归档实验，仅代表当前数据、初值和配置，不能推导所有场景的最优体素大小。</p></section>
+  </div>
+  <footer><p><strong>工程解释：</strong>配准求解调用 PCL point-to-point ICP；输入处理、位姿表达、质量门禁和展示链路由项目实现。网页调用本机 C++ 进程，不在浏览器重写 ICP。</p><p>当前聚焦两帧配准与相对位姿。KITTI 内点 RMSE 是几何匹配残差，不等于车辆定位误差；收敛且低残差仍可能出现重复结构匹配歧义。</p><p>KITTI Raw：2011_09_26_drive_0005_sync；A. Geiger, P. Lenz, C. Stiller, R. Urtasun, <em>Vision meets Robotics: The KITTI Dataset</em>, IJRR 2013。道路数据及派生展示遵循 CC BY-NC-SA 3.0；项目原创代码 MIT © 2026 Wang Chenqi。完整归属见仓库 docs/THIRD_PARTY.md 与结果 ATTRIBUTION.md。</p></footer>
+</main>
+</body></html>

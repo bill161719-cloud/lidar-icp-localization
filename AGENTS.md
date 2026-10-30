@@ -26,6 +26,8 @@ A/B/C 已集成，第二轮独立复审在教学/工程展示范围通过，现�
 跨边界改动先说明理由和建议补丁，由主对话审批、实施；模块不得直接改共享 CMake 或进度表。
 首轮集成新增 include/registration_pipeline.h、src/registration_pipeline.cpp、tests/test_pipeline.py 归主对话维护。
 本轮集成的 tools/validate_experiments.py、test_experiment_validation.py、绘图版本锁与总体验收记录也由主对话维护。
+2026-10-30用户授权本地网页展示层，web_demo/、tools/start_web_demo.ps1、docs/WEB_DEMO.md归主对话维护；不改核心算法。
+网页独立测试用python web_demo/test_server.py，缺KITTI明确skip；完整构建/CTest仍按既有工具执行。
 集成层的必要修复可由主对话实施，须记录原因、补回归并重新测试；本轮已修复 pose_utils 的微小旋转误差精度问题。
 使用独立 worktree，禁止多个对话在同一工作目录切换分支。接口变更由主对话统一发布。
 模块交付必须列任务编号、修改文件、分支、提交 ID、编译和测试命令/结果、遗留问题、下一步。

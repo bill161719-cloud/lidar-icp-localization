@@ -100,6 +100,15 @@ KITTI 帧1的原始道路点云，以 XYZ 空间坐标（米）展示，颜色�
 
 ## 环境与快速运行
 
+### 本地交互演示
+
+已有构建与本地数据时，运行 `./tools/start_web_demo.ps1 -OpenBrowser`，打开本机网页。
+支持旋转缩放点云、切换配准前后、调整参数并实际调用 C++ ICP，查看质量结果和导出 JSON。
+已验证实验回放单独标识，作为离线展示备用；不会冒充本次计算。
+启动、界面操作和面试演示流程见[本地网页演示](docs/WEB_DEMO.md)。
+
+### 命令行构建与运行
+
 已验证环境：**Windows 11 · MSYS2 UCRT64 GCC 16.2.0 · PCL 1.15.1 · Eigen 3.4.0 · CMake 3.31.6**。
 测试驱动使用 Python >=3.9；批量实验绘图另用 NumPy/Matplotlib。依赖安装和版本固定方式见[环境说明](docs/ENVIRONMENT.md)。
 
